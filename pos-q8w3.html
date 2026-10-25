@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>One Percenter Kasa</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--sf:#141414;--ln:#3a3a3a;--tx:#fff;--mu:#a8a8a8;--wa:#ffd479;--er:#ff7b7b;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 Montserrat,system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+#app{max-width:560px;margin:0 auto;padding:12px 14px 40px}
+button{font:inherit;color:var(--tx);background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:11px 12px;cursor:pointer}
+button.p{background:#fff;color:#000;font-weight:800;border-color:#fff}
+button.d{color:var(--er)}.w{width:100%}
+input,select{font:inherit;color:var(--tx);background:#000;border:1px solid var(--ln);border-radius:10px;padding:11px;width:100%}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:10px 0 12px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tb{padding:18px 6px;text-align:center;font-weight:800}.tb.f{border-color:var(--wa);color:var(--wa)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+.chips button{flex:none;border-radius:999px;padding:8px 14px}.chips .on{background:#fff;color:#000}
+.row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--ln)}
+.mu{color:var(--mu)}.sm{font-size:12px}.er{color:var(--er)}.wa{color:var(--wa)}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:flex-end;justify-content:center;z-index:40;padding:16px}
+.mdl{background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:16px;width:100%;max-width:520px;max-height:85vh;overflow-y:auto}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cd{border:1px solid var(--ln);border-radius:12px;padding:12px;background:var(--sf)}.cd b{display:block;font-size:20px}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:8px 4px;border-bottom:1px solid var(--ln);text-align:left}.r{text-align:right}
+h1{font-size:30px;font-weight:800;margin:20px 0 4px;line-height:1}h2{font-size:17px;margin:20px 0 8px}
+</style>
+</head>
+<body>
+<div id="app"><p class="mu">Yükleniyor...</p></div>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+var sb=supabase.createClient("https://ojfmpnqyrdfybbmchbvq.supabase.co","sb_publishable_oS6qBLKqbAPCBCzGVe5efw_AFqvCPoG");
+var $=function(i){return document.getElementById(i)};
+var TK="0x4AAAAAAFli3uwc6xrSxT7j",TT="",TW=null;
+function tsr(id){var el=$(id);if(!el)return;if(!window.turnstile){setTimeout(function(){tsr(id)},300);return}TT="";TW=turnstile.render(el,{sitekey:TK,theme:"dark",callback:function(t){TT=t},"expired-callback":function(){TT=""},"error-callback":function(){TT=""}})}
+
+function E(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function F(n){return Number(n).toLocaleString("tr-TR")+"₺"}
+var C=[],TL=[],TN={},me=null,view="login",tb=0,ct=0,md=null,msg="",O={},sel={},PM=[],RP=null,busy=false,ch=null,rt=null;
+var rd=new Date().toLocaleDateString("sv-SE"),re=rd;
+var D=(function(){try{return JSON.parse(localStorage.getItem("opd"))||{}}catch(e){return{}}})();
+function sd(){try{localStorage.setItem("opd",JSON.stringify(D))}catch(e){}}
+function tot(L){return L.reduce(function(a,l){return a+(l.status=="ok"?l.price*l.qty:0)},0)}
+function due(o){return o.order_items.reduce(function(a,l){return a+(l.status=="ok"?(l.qty-l.paid_qty)*l.price:0)},0)}
+function rem(o){return o.order_items.reduce(function(a,l){return a+(l.status=="ok"?l.qty-l.paid_qty:0)},0)}
+function LN(id){return O[tb].order_items.filter(function(l){return l.id==id})[0]}
+async function rp(fn,args){var r=await sb.rpc(fn,args);if(r.error){msg=r.error.message;return false}return true}
+async function ld(){var r=await sb.from("orders").select("id,table_no,order_items(id,name,price,qty,paid_qty,status,reason,approved_by,created_at)").eq("status","open");
+if(r.error){msg="Bağlantı hatası: "+r.error.message;return}
+O={};r.data.forEach(function(o){o.order_items.sort(function(a,b){return a.id-b.id});O[o.table_no]=o});var t=await sb.from("pos_tables").select("id,name").eq("active",true).order("id");if(!t.error){TL=t.data;TN={};TL.forEach(function(x){TN[x.id]=x.name})}}
+async function lpm(){var o=O[tb];if(!o){PM=[];return}var r=await sb.from("payments").select("method,amount").eq("order_id",o.id).order("id");PM=r.data||[]}
+async function lrep(){var s=new Date(rd+"T00:00:00"),e=new Date(re+"T00:00:00");e.setDate(e.getDate()+1);
+var it=[],k=0;while(true){var r=await sb.from("order_items").select("*").gte("created_at",s.toISOString()).lt("created_at",e.toISOString()).order("id").range(k,k+999);if(r.error||!r.data)break;it=it.concat(r.data);if(r.data.length<1000)break;k+=1000}
+var ids=[];it.forEach(function(l){if(ids.indexOf(l.order_id)<0)ids.push(l.order_id)});
+var pp=[];for(k=0;k<ids.length;k+=50){var q=await sb.from("payments").select("*").in("order_id",ids.slice(k,k+50));pp=pp.concat(q.data||[])}
+var pr=await sb.from("profiles").select("id,name");
+RP={p:pp,i:it,n:{}};(pr.data||[]).forEach(function(x){RP.n[x.id]=x.name})}
+function sub(){if(ch)return;ch=sb.channel("op");["orders","order_items","payments","pos_tables"].forEach(function(t){ch.on("postgres_changes",{event:"*",schema:"public",table:t},rl)});ch.subscribe()}
+function rl(){clearTimeout(rt);rt=setTimeout(async function(){if(!me)return;await ld();if(view!="report"&&view!="tcfg"&&(!md||md.k=="pay")){if(md)await lpm();R()}},300)}
+async function after(){var u=(await sb.auth.getUser()).data.user;
+if(!u){return false}
+var p=await sb.from("profiles").select("name,role,active,can_approve").eq("id",u.id).maybeSingle();
+if(p.error||!p.data||!p.data.active){await sb.auth.signOut();msg="Bu hesap yetkili değil";return false}
+me=p.data;view="tables";await ld();sub();return true}
+function vLogin(){return'<h1>ONE<br>PERCENTER</h1><p class="mu">Kasa girişi</p><input id="un" placeholder="Kullanıcı adı" autocapitalize="none" autocomplete="username" style="margin:6px 0"><input id="pw" type="password" placeholder="Şifre" autocomplete="current-password" style="margin:6px 0 10px"><div id="ts" style="margin:0 0 10px"></div><button class="p w" data-a="lg">Giriş</button><p class="er">'+E(msg)+'</p>'}
+function vTables(){var h='<div class="top"><b>'+E(me.name)+'</b><span>'+(me.role=="yonetici"?'<button data-a="tc">Masalar</button> <button data-a="rep">Rapor</button> ':'')+'<button data-a="out">Çıkış</button></span></div>'+(msg?'<p class="er">'+E(msg)+'</p>':'')+'<div class="grid">';
+TL.forEach(function(t){var o=O[t.id];h+='<button class="tb'+(o?' f':'')+'" data-a="tb" data-i="'+t.id+'">'+E(t.name)+'<br><span class="sm">'+(o?F(due(o)):'Boş')+'</span></button>'})
+return h+'</div>'}
+function vOrder(){var o=O[tb],L=o?o.order_items:[],d=D[tb]||[],h='<div class="top"><button data-a="bk">← Masalar</button><b>'+E(TN[tb]||'Masa '+tb)+' · '+F(tot(L))+'</b></div>';
+if(msg)h+='<p class="er">'+E(msg)+'</p>';
+if(d.length){h+='<div class="cd" style="border-color:var(--wa)"><b class="wa" style="font-size:15px">Onay bekleyen (masaya yazılmadı)</b>';
+d.forEach(function(l,i){h+='<div class="row"><span>'+l.q+' × '+E(l.n)+'</span><span style="display:flex;gap:6px;align-items:center">'+F(l.p*l.q)+'<button data-a="dm" data-i="'+i+'">−</button><button data-a="dp" data-i="'+i+'">+</button></span></div>'});
+h+='<button class="p w" data-a="dc" style="margin-top:10px">Onayla ve masaya yaz · '+F(d.reduce(function(a,l){return a+l.p*l.q},0))+'</button><button class="w" data-a="dx" style="margin-top:6px">Temizle</button></div>'}
+h+='<div class="chips" style="margin-top:12px">';
+C.forEach(function(c,i){h+='<button class="'+(i==ct?'on':'')+'" data-a="ct" data-i="'+i+'">'+E(c.t)+'</button>'});
+h+='</div>';
+if(C[ct])C[ct].i.forEach(function(m,i){h+='<div class="row"><span>'+E(m.n)+' <span class="mu">'+F(m.p)+'</span></span><button data-a="add" data-i="'+i+'">+ Ekle</button></div>'});
+h+='<h2>Masa siparişi</h2>';
+if(!L.length)h+='<p class="mu">Henüz onaylanmış ürün yok.</p>';
+L.forEach(function(l){var ok=l.status=="ok";
+h+='<div class="row"><div><b'+(l.status=="iptal"?' style="text-decoration:line-through"':'')+'>'+l.qty+' × '+E(l.name)+'</b>'+(ok?(l.paid_qty?'<div class="mu sm">'+l.paid_qty+' adet ödendi</div>':''):' <span class="'+(l.status=="iptal"?'er':'wa')+' sm">'+(l.status=="iptal"?"İPTAL":"İKRAM")+'</span><div class="mu sm">'+E(l.reason)+'</div>')+'</div><div style="display:flex;gap:6px;align-items:center"><span>'+F(ok?l.price*l.qty:0)+'</span>';
+if(ok&&!l.paid_qty)h+='<button data-a="ac" data-i="'+l.id+'" data-v="ikram">İkram</button><button class="d" data-a="ac" data-i="'+l.id+'" data-v="iptal">İptal</button>';
+h+='</div></div>'});
+if(L.length){if(d.length)h+='<p class="mu sm" style="margin-top:12px">Ödemeye geçmek için önce onay bekleyen ürünleri onaylayın ya da temizleyin.</p>';
+else h+='<button class="p w" data-a="cl" style="margin-top:16px">Ödeme / hesabı kapat · kalan '+F(due(o))+'</button>'}
+return h}
+function vTcfg(){var h='<div class="top"><button data-a="bk">← Masalar</button><b>Masaları düzenle</b></div>'+(msg?'<p class="er">'+E(msg)+'</p>':'');
+TL.forEach(function(t){h+='<div class="row"><input id="tn'+t.id+'" value="'+E(t.name)+'" style="flex:1"><button data-a="ts" data-i="'+t.id+'">Kaydet</button><button class="d" data-a="tx" data-i="'+t.id+'">Sil</button></div>'});
+return h+'<h2>Yeni masa</h2><div class="row"><input id="tnew" placeholder="Masa adı (örn. Bahçe 1)" style="flex:1"><button class="p" data-a="ta">Ekle</button></div><p class="mu sm">Silinen masanın geçmiş kayıtları raporlarda kalır. Açık hesabı olan masa silinemez.</p>'}
+function vModal(){var h='<div class="ov"><div class="mdl">';
+if(md.k=="pay"){var o=O[tb];
+if(!o)return h+'<p>Masa kapandı.</p><button class="w" data-a="mc">Tamam</button></div></div>';
+h+='<h2 style="margin-top:0">Ödeme · kalan '+F(due(o))+'</h2>';
+PM.forEach(function(p){h+='<div class="mu sm">✓ '+(p.method=="nakit"?"Nakit":"Kart")+' · '+F(p.amount)+'</div>'});
+if(!rem(o))h+='<button class="p w" data-a="fin" style="margin-top:10px">Masayı kapat</button>';
+else{h+='<p class="mu sm">Ödeyecek kişinin ürünlerini seçin, sonra ödeme şeklini seçin.</p>';var sa=0;
+o.order_items.forEach(function(l){var r=l.status=="ok"?l.qty-l.paid_qty:0;if(!r)return;var s=sel[l.id]||0;sa+=s*l.price;
+h+='<div class="row"><span>'+E(l.name)+' <span class="mu">'+F(l.price)+'</span></span><span style="display:flex;gap:6px;align-items:center"><button data-a="sm" data-i="'+l.id+'">−</button><b>'+s+' / '+r+'</b><button data-a="sp" data-i="'+l.id+'">+</button></span></div>'});
+h+='<button class="w" data-a="sall" style="margin-top:8px">Tümünü seç</button><h2>Seçilen: '+F(sa)+'</h2><p class="er">'+E(msg)+'</p><div style="display:flex;gap:8px"><button class="p w" data-a="pay" data-v="nakit">Nakit öde</button><button class="p w" data-a="pay" data-v="kart">Kart öde</button></div>'}}
+else{var RS=md.k=="iptal"?["Müşteri vazgeçti","Yanlış sipariş","Hazırlama hatası"]:["Müşteri memnuniyeti","Personel ikramı","Deneme / tadım"];
+h+='<h2 style="margin-top:0">'+(md.k=="iptal"?"Ürünü iptal et":"Ürünü ikram et")+'</h2><select id="rs">'+RS.map(function(x){return'<option>'+x+'</option>'}).join('')+'</select>';
+if(me.role!="yonetici"&&!me.can_approve)h+='<input id="ap" type="password" inputmode="numeric" placeholder="Yönetici PIN" style="margin-top:8px">';
+h+='<p class="er">'+E(msg)+'</p><button class="p w" data-a="mk">Onayla</button>'}
+return h+'<button class="w" data-a="mc" style="margin-top:8px">'+(md.k=="pay"?"Geri dön":"Vazgeç")+'</button></div></div>'}
+function tbl(hd,rows){if(!rows.length)return'<p class="mu sm">Kayıt yok.</p>';return'<table><tr>'+hd.map(function(x,i){return'<th'+(i==hd.length-1?' class="r"':'')+'>'+x+'</th>'}).join('')+'</tr>'+rows.map(function(r){return'<tr>'+r.map(function(x,i){return'<td'+(i==r.length-1?' class="r"':'')+'>'+E(x)+'</td>'}).join('')+'</tr>'}).join('')+'</table>'}
+function vReport(){var h='<div class="top"><button data-a="bk">← Masalar</button><b>Rapor</b></div><div style="display:flex;gap:8px;margin-bottom:8px"><div style="flex:1"><span class="mu sm">Başlangıç</span><input type="date" id="rd" value="'+rd+'"></div><div style="flex:1"><span class="mu sm">Bitiş</span><input type="date" id="re" value="'+re+'"></div></div><div class="chips"><button data-a="rg" data-v="today">Bugün</button><button data-a="rg" data-v="yday">Dün</button><button data-a="rg" data-v="7">Son 7 gün</button><button data-a="rg" data-v="month">Bu ay</button></div><p class="mu sm">Ürünler, masaya girildiği güne göre hesaplanır.</p>';
+if(!RP)return h+'<p class="mu">Yükleniyor...</p>';
+var P={},O2={nakit:0,kart:0},ci=0,ik=[0,0],ip=[0,0],W={},X=[],ords={},DY={},IM={};
+RP.i.forEach(function(l){IM[l.id]=l;
+if(l.status=="ok"){if(l.paid_qty){var c=l.paid_qty*l.price;ci+=c;P[l.name]=P[l.name]||[0,0];P[l.name][0]+=l.paid_qty;P[l.name][1]+=c}}
+else{var z=l.status=="ikram"?ik:ip;z[0]+=l.qty;z[1]+=l.price*l.qty;X.push([l.qty+"× "+l.name,l.status=="ikram"?"İkram":"İptal",l.reason||"",(RP.n[l.added_by]||"?")+" · "+(l.approved_by||"")])}});
+RP.p.forEach(function(p){(p.items||[]).forEach(function(e){var l=IM[e.item];if(!l)return;var a=e.qty*l.price;O2[p.method]+=a;ords[p.order_id]=1;
+var n=RP.n[p.created_by]||"?";W[n]=W[n]||[{},0];W[n][0][p.id]=1;W[n][1]+=a;
+var k=new Date(l.created_at).toLocaleDateString("sv-SE");DY[k]=DY[k]||[{},0];DY[k][0][p.order_id]=1;DY[k][1]+=a})});
+function cd(a,b,c){return'<div class="cd"><span class="mu sm">'+a+'</span><b>'+b+'</b>'+(c?'<span class="mu sm">'+c+'</span>':'')+'</div>'}
+h+='<div class="cards">'+cd("Toplam ciro",F(ci))+cd("Ödenen hesap",Object.keys(ords).length)+cd("Nakit",F(O2.nakit))+cd("Kart",F(O2.kart))+cd("İkram",ik[0]+" adet",F(ik[1]))+cd("İptal",ip[0]+" adet",F(ip[1]))+'</div>';
+var pr=Object.keys(P).sort(function(a,b){return P[b][0]-P[a][0]}).map(function(k){return[k,P[k][0]+" adet",F(P[k][1])]});
+h+=(Object.keys(DY).length>1?'<h2>Günlere göre</h2>'+tbl(["Tarih","Hesap","Ciro"],Object.keys(DY).sort().map(function(k){return[k.split("-").reverse().join("."),Object.keys(DY[k][0]).length,F(DY[k][1])]})):'')+'<h2>Ürün bazında satış</h2>'+tbl(["Ürün","Adet","Tutar"],pr);
+h+='<h2>Garson bazında tahsilat</h2>'+tbl(["Kişi","İşlem","Tutar"],Object.keys(W).map(function(k){return[k,Object.keys(W[k][0]).length,F(W[k][1])]}));
+h+='<h2>İptal ve ikram kayıtları</h2>'+tbl(["Ürün","Tür","Neden","Ekleyen · onaylayan"],X);
+return h}
+function R(){if(!$("app"))return;var h=view=="login"?vLogin():view=="tables"?vTables():view=="order"?vOrder():view=="tcfg"?vTcfg():vReport();$("app").innerHTML=h+(md&&me?vModal():"");if(view=="login")tsr("ts")}
+document.addEventListener("change",async function(ev){if(ev.target.id=="rd"||ev.target.id=="re"){if(ev.target.id=="rd")rd=ev.target.value||rd;else re=ev.target.value||re;if(rd>re){if(ev.target.id=="rd")re=rd;else rd=re}RP=null;R();await lrep();R()}});
+document.addEventListener("click",async function(ev){var b=ev.target.closest("[data-a]");if(!b||busy)return;busy=true;
+var a=b.dataset.a,i=+b.dataset.i,v=b.dataset.v;msg="";
+try{
+if(a=="lg"){var u=$("un").value.trim().toLowerCase().replace(/\s+/g,""),pw=$("pw").value;
+if(!u||!pw)msg="Kullanıcı adı ve şifre girin";else if(!TT)msg="Lütfen doğrulamayı tamamlayın";else{var r=await sb.auth.signInWithPassword({email:u+"@op.example.com",password:pw,options:{captchaToken:TT}});if(r.error)msg=/captcha/i.test(r.error.message)?"Doğrulama başarısız, tekrar deneyin":"Kullanıcı adı ya da şifre yanlış";else await after()}}
+else if(a=="out"){await sb.auth.signOut();if(ch){sb.removeChannel(ch);ch=null}me=null;O={};view="login"}
+else if(a=="tb"){tb=i;ct=0;view="order";await ld()}
+else if(a=="bk"){view="tables";await ld()}
+else if(a=="rep"){view="report";rd=re=new Date().toLocaleDateString("sv-SE");RP=null;R();await lrep()}
+else if(a=="rg"){var t=new Date(),f=new Date();if(v=="yday"){f.setDate(f.getDate()-1);t=new Date(f)}else if(v=="7")f.setDate(f.getDate()-6);else if(v=="month")f.setDate(1);rd=f.toLocaleDateString("sv-SE");re=t.toLocaleDateString("sv-SE");RP=null;R();await lrep()}
+else if(a=="tc"){view="tcfg";await ld()}
+else if(a=="ts"){if(await rp("save_table",{p_id:i,p_name:$("tn"+i).value}))await ld()}
+else if(a=="ta"){if(await rp("save_table",{p_id:null,p_name:$("tnew").value}))await ld()}
+else if(a=="tx"){if(confirm("Bu masa silinsin mi?")){if(await rp("remove_table",{p_id:i}))await ld()}}
+else if(a=="ct")ct=i;
+else if(a=="add"){var m=C[ct].i[i],d=D[tb]=D[tb]||[],l=d.filter(function(x){return x.n==m.n})[0];if(l)l.q++;else d.push({n:m.n,p:m.p,q:1});sd()}
+else if(a=="dp"){D[tb][i].q++;sd()}
+else if(a=="dm"){var d2=D[tb];d2[i].q--;if(!d2[i].q)d2.splice(i,1);if(!d2.length)delete D[tb];sd()}
+else if(a=="dx"){delete D[tb];sd()}
+else if(a=="dc"){if(await rp("add_items",{p_table:tb,p_items:D[tb].map(function(x){return{name:x.n,price:x.p,qty:x.q}})})){delete D[tb];sd();await ld()}}
+else if(a=="ac")md={k:v,id:i};
+else if(a=="mc")md=null;
+else if(a=="mk"){var pin=(me.role=="yonetici"||me.can_approve)?"":$("ap").value;if(await rp("approve_item",{p_item:md.id,p_status:md.k,p_reason:$("rs").value,p_pin:pin})){md=null;await ld()}}
+else if(a=="cl"){md={k:"pay"};sel={};await lpm()}
+else if(a=="sp"){var l4=LN(i);sel[i]=Math.min(l4.qty-l4.paid_qty,(sel[i]||0)+1)}
+else if(a=="sm")sel[i]=Math.max(0,(sel[i]||0)-1);
+else if(a=="sall"){O[tb].order_items.forEach(function(l){if(l.status=="ok")sel[l.id]=l.qty-l.paid_qty})}
+else if(a=="pay"){var o=O[tb],sl=[];o.order_items.forEach(function(l){if(sel[l.id])sl.push({item:l.id,qty:sel[l.id]})});
+if(!sl.length)msg="Önce ödenecek ürünü seçin";else{var ok=await rp("pay_items",{p_order:o.id,p_method:v,p_sel:sl});sel={};await ld();if(!O[tb]){md=null;view="tables"}else await lpm()}}
+else if(a=="fin"){if(await rp("close_order",{p_order:O[tb].id})){md=null;view="tables";await ld()}}
+}catch(e){msg="Hata: "+e.message}
+busy=false;R()});
+(async function(){try{var r=await fetch("menu.json?v="+Date.now()),d=await r.json();C=d.sections.map(function(s){if(s.type=="brew"){var it=[];(s.cards||[]).forEach(function(k){(k.methods||[]).forEach(function(m){it.push({n:k.name+" · "+m.name,p:+m.price})})});return{t:s.title,i:it}}return{t:s.title,i:(s.items||[]).map(function(x){return{n:x.n,p:+x.p}})}})}catch(e){msg="Menü yüklenemedi"}
+try{var s=await sb.auth.getSession();if(s.data.session)await after()}catch(e){}
+R()})();
+</script>
+</body>
+</html>

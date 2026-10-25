@@ -28,10 +28,14 @@ label{display:block;margin:14px 0 4px;font-size:12.5px;color:var(--mu)}label.cb{
 <body>
 <div id="app"><p class="mu">Yükleniyor...</p></div>
 <div id="bar" hidden><span id="st" class="mu"></span><span id="bt"></span></div>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 var sb=supabase.createClient("https://ojfmpnqyrdfybbmchbvq.supabase.co","sb_publishable_oS6qBLKqbAPCBCzGVe5efw_AFqvCPoG");
 var $=function(i){return document.getElementById(i)};
+var TK="0x4AAAAAAFli3uwc6xrSxT7j",TT="",TW=null;
+function tsr(id){var el=$(id);if(!el)return;if(!window.turnstile){setTimeout(function(){tsr(id)},300);return}TT="";TW=turnstile.render(el,{sitekey:TK,theme:"dark",callback:function(t){TT=t},"expired-callback":function(){TT=""},"error-callback":function(){TT=""}})}
+
 function E(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function slug(s){return String(s||"").replace(/İ/g,"i").toLowerCase().replace(/ı/g,"i").replace(/ğ/g,"g").replace(/ü/g,"u").replace(/ş/g,"s").replace(/ö/g,"o").replace(/ç/g,"c").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"")}
 var RL=[[1,"1 · çok açık"],[2,"2 · açık"],[3,"3 · orta"],[4,"4 · orta-koyu"],[5,"5 · koyu"]];
@@ -95,9 +99,9 @@ if(t=="faq")return v.split("\n").map(function(l){var i=l.indexOf("|");return{q:l
 if(t=="dt")return v?new Date(v).toISOString():null;
 return v.trim()}
 function snap(){CFG[tab].f.forEach(function(f){var v=val(f);if(v!==undefined)cur[f[0]]=v})}
-function R(){var h=!me?vLogin():cur?vForm():vList();$("app").innerHTML=h;$("bar").hidden=!(me&&cur);
+function R(){var h=!me?vLogin():cur?vForm():vList();$("app").innerHTML=h;$("bar").hidden=!(me&&cur);if(!me)tsr("ts");
 $("bt").innerHTML=cur?(isNew||CFG[tab].del===false?'':'<button class="d" data-a="del">Sil</button> ')+'<button class="p" data-a="save">Kaydet</button>':""}
-function vLogin(){return'<h1>Site yönetimi</h1><label>Kullanıcı adı</label><input id="un" autocapitalize="none" autocomplete="username"><label>Şifre</label><input id="pw" type="password" autocomplete="current-password"><p><button class="p" data-a="lg">Giriş</button></p><p class="er">'+E(msg)+'</p>'}
+function vLogin(){return'<h1>Site yönetimi</h1><label>Kullanıcı adı</label><input id="un" autocapitalize="none" autocomplete="username"><label>Şifre</label><input id="pw" type="password" autocomplete="current-password"><div id="ts" style="margin:12px 0"></div><p><button class="p" data-a="lg">Giriş</button></p><p class="er">'+E(msg)+'</p>'}
 async function after(){var u=(await sb.auth.getUser()).data.user;if(!u)return false;var p=await sb.from("profiles").select("name,role,active").eq("id",u.id).maybeSingle();
 if(!p.data||p.data.role!="yonetici"||!p.data.active){await sb.auth.signOut();msg="Bu sayfa yalnızca yönetici içindir";return false}
 me=p.data;await lc();await lb();await lr();return true}
@@ -110,7 +114,7 @@ if(r.error){msg=r.error.message;continue}var u=sb.storage.from("site-media").get
 st("Fotoğraf yüklendi. Kaydetmeyi unutmayın.","ok");R()});
 document.addEventListener("click",async function(e){var b=e.target.closest("[data-a]");if(!b)return;var a=b.dataset.a;msg="";var c=CFG[tab];
 try{
-if(a=="lg"){var u=$("un").value.trim().toLowerCase().replace(/\s+/g,""),pw=$("pw").value;var r=await sb.auth.signInWithPassword({email:u+"@op.example.com",password:pw});if(r.error)msg="Kullanıcı adı ya da şifre yanlış";else await after()}
+if(a=="lg"){var u=$("un").value.trim().toLowerCase().replace(/\s+/g,""),pw=$("pw").value;if(!TT){msg="Lütfen doğrulamayı tamamlayın";R();return}var r=await sb.auth.signInWithPassword({email:u+"@op.example.com",password:pw,options:{captchaToken:TT}});if(r.error)msg=/captcha/i.test(r.error.message)?"Doğrulama başarısız, tekrar deneyin":"Kullanıcı adı ya da şifre yanlış";else await after()}
 else if(a=="out"){await sb.auth.signOut();me=null;cur=null}
 else if(a=="tab"){tab=b.dataset.k;cur=null;await lb();await lr()}
 else if(a=="new"){cur=JSON.parse(JSON.stringify(c.df||{}));isNew=true;if(tab=="rp"||tab=="wp"){var sc=tab=="rp"?"retail":"wholesale";var f1=CATS.filter(function(x){return x.scope==sc})[0];if(f1)cur.category_id=f1.id}}
