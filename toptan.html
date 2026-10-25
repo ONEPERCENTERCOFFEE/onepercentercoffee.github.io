@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Toptan Kahve, Çay, Şurup ve Bar Ekipmanı | One Percenter</title>
+<meta name="description" content="Kafeler ve işletmeler için toptan kahve, çay, şurup, sos ve bar ihtiyaç ürünleri. Kendi kavurduğumuz çekirdek, toplu alım iskontoları, numune ve teklif talebi.">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<style>
+.cats{display:grid;gap:10px;grid-template-columns:1fr 1fr;margin-bottom:6px}
+.ct{font:inherit;text-align:left;color:var(--tx);background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:13px;cursor:pointer}.ct b{display:block;font-size:14.5px;font-weight:800}.ct.on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
+.bar2{display:flex;justify-content:space-between;align-items:baseline;margin:20px 0 4px}.bar2 b{font-size:18px;font-weight:800}.bar2 span{color:var(--mu);font-size:12px}
+.it{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--ln)}.it .n{font-weight:800;font-size:14.5px}.it small{display:block;color:var(--mu);font-size:12px;margin-top:2px}.it img{width:44px;height:44px;object-fit:cover;border-radius:8px}
+.pr{font-weight:800;white-space:nowrap;text-align:right;min-width:74px}.pr.ask{font-weight:600;color:var(--mu)}
+.qt{display:flex;align-items:center;gap:6px}.qt button{font:inherit;width:32px;height:32px;border-radius:8px;border:1px solid var(--ln);background:none;color:var(--tx);cursor:pointer}.qt i{min-width:22px;text-align:center;font-style:normal;font-weight:800}
+.add{font:inherit;font-weight:800;font-size:12.5px;color:var(--bg);background:var(--tx);border:0;border-radius:999px;padding:9px 13px;cursor:pointer}.add:disabled{background:var(--ln);color:var(--mu);cursor:not-allowed}
+#cart{position:fixed;left:0;right:0;bottom:0;z-index:55;background:var(--tx);color:var(--bg);display:none;justify-content:space-between;align-items:center;gap:10px;padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px))}#cart.on{display:flex}#cart b{font-weight:800}
+#cart button{font:inherit;font-weight:800;color:var(--tx);background:var(--bg);border:0;border-radius:999px;padding:11px 18px;cursor:pointer}
+.row{display:grid;gap:14px;grid-template-columns:1fr}.cl{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--ln);font-size:14px}
+.tot{display:flex;justify-content:space-between;padding:6px 0;font-size:14px}.tot.b{font-weight:800;font-size:17px;border-top:1px solid var(--tx);margin-top:6px;padding-top:10px}
+@media(min-width:760px){.cats{grid-template-columns:repeat(4,1fr)}.row{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<main>
+<section class="hero"><div class="w"><small class="k">Kafeler ve işletmeler için</small><h1>BARINIZIN İHTİYACI OLAN HER ŞEY.</h1><p class="lead">Kahveden süt ve şuruba, bardaktan makineye: bir cafe barında kullanılan ürünleri tek yerden, kendi kavurduğumuz kahveyle birlikte tedarik edin.</p><a class="bt p" href="#katalog">Kataloğa bak</a><a class="bt" href="#teklif">Numune / teklif iste</a></div></section>
+<section class="sec" id="katalog"><div class="w"><h2>Toptan ürün listesi</h2><div id="gate"><p class="sub">Yükleniyor...</p></div>
+<div id="catw" hidden><p class="sub">Bir kategori seçin. Fiyatlar KDV hariçtir. "Fiyat sorunuz" yazan ürünler sepete değil, teklif listesine eklenir.</p><div class="cd" style="margin-bottom:16px" id="tw" hidden><h3>Toplu alım iskontosu</h3><p id="tiers"></p></div><div class="cats" id="cats"></div><div class="bar2"><b id="ctn">Tümü</b><span>KDV hariç fiyatlar</span></div><p class="sub" id="cds" hidden></p><div id="list"></div></div></div></section>
+<section class="sec"><div class="w"><h2>Neden tek yerden?</h2><p class="sub">Tedarikçi sayısını azaltın, bara odaklanın.</p><div class="row">
+<div class="cd"><h3>Kendi kahvemiz</h3><p>Çekirdeği kendimiz kavuruyoruz. Barınızın tadını birlikte belirleyebiliriz.</p></div>
+<div class="cd"><h3>Tek sipariş, tek yer</h3><p>Kahve, sarf malzemesi ve ekipmanı ayrı ayrı tedarikçilerle uğraşmadan tek sepette toplayın.</p></div>
+<div class="cd"><h3>Net fiyat, toplu iskonto</h3><p>Fiyat listesi üyelerimize açık. Alım miktarı arttıkça iskonto otomatik uygulanır.</p></div></div></div></section>
+<section class="sec"><div class="w"><div class="cd inv" style="padding:26px"><h3>Yeni kafe mi açıyorsunuz?</h3><p>Açılışta gereken kahve, bar ekipmanı ve sarf malzemelerini tek paket olarak hazırlayabiliriz. Bütçenizi ve konseptinizi anlatın, size liste çıkaralım.</p><p style="margin-top:14px"><a class="bt p" href="#teklif" style="margin:0">Açılış paketi iste</a></p></div></div></section>
+<section class="sec" id="teklif"><div class="w"><h2>Numune ya da teklif isteyin</h2><p class="sub">Formu doldurun, size dönüş yapalım. Üye olmanız gerekmez.</p><div class="f" style="max-width:520px"><div id="ql"></div>
+<label>Firma / kafe adı</label><input id="t_c"><label>Yetkili kişi</label><input id="t_n"><label>Telefon</label><input id="t_p" inputmode="tel"><label>E-posta</label><input id="t_e" type="email"><label>Neye ihtiyacınız var?</label><textarea id="t_m" rows="3" placeholder="Örn. günlük 30 kg kahve, süt ve şurup, yeni espresso makinesi"></textarea><p class="msg" id="t_s"></p><p><button class="bt p" id="t_b" type="button" style="margin:10px 0 0">Gönder</button></p></div></div></section>
+</main>
+<div id="cart"><div><span><b id="cn"></b><b id="ct2"></b></span><small id="cs" style="display:block;font-size:11.5px;color:#444"></small></div><button id="co" type="button">Sepeti aç</button></div>
+<div class="md" id="cm"><div class="bx"><h3 style="margin:0 0 8px">Sepetim</h3><div id="cb"></div><div class="f"><label>Firma / kafe adı</label><input id="o_c"><label>Telefon</label><input id="o_p" inputmode="tel"><label>Not (isteğe bağlı)</label><textarea id="o_m" rows="2"></textarea></div><p class="sub" style="margin:12px 0 0;font-size:12px">Online ödeme yakında açılacak. Siparişinizi gönderince ödeme ve teslimat için sizinle iletişime geçeceğiz.</p><p class="msg" id="o_s"></p><p style="margin:12px 0 0"><button class="bt p" id="o_o" type="button" style="margin:0 8px 8px 0">Siparişi gönder</button><button class="bt p" id="o_q" type="button" style="margin:0 8px 8px 0">Teklif iste</button><button class="bt" id="o_x" type="button" style="margin:0 0 8px">Kapat</button></p></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="site.js"></script>
+<script>
+var C=[],P=[],T=[],sel=0,q={},cart={},quote={},st="misafir";
+try{var sv=JSON.parse(localStorage.getItem("opt")||"{}");cart=sv.cart||{};quote=sv.quote||{}}catch(x){}
+function save(){try{localStorage.setItem("opt",JSON.stringify({cart:cart,quote:quote}))}catch(x){}}
+function pr(id){return P.filter(function(p){return p.id==id})[0]}
+function up(p,n){var u=Number(p.price);(p.tiers||[]).forEach(function(r){if(n>=r.min)u=Number(r.price)});return u}
+function calc(){var t=0,n=0;Object.keys(cart).forEach(function(id){var p=pr(id);if(p){n++;t+=cart[id]*up(p,cart[id])}});var d=0,nx=null;T.forEach(function(r){if(t>=Number(r.min_total))d=Number(r.pct);else if(!nx)nx=r});return{t:t,n:n,d:d,ds:Math.round(t*d)/100,nx:nx}}
+function gate(){var g=$("gate"),ok=st=="onayli";$("catw").hidden=!ok;
+if(ok){g.innerHTML="";return}
+if(st=="misafir")g.innerHTML='<div class="cd inv"><h3>Toptan fiyat listesi üyelerimize özel</h3><p>Kafe ve işletme sahipleri için hazırladığımız ürün ve fiyat listesini görmek için üye olun ve onay isteyin.</p><p style="margin-top:14px"><button class="bt p" data-a="u1" style="margin:0 8px 0 0">Üye ol</button><button class="bt" data-a="u2" style="margin:0">Giriş yap</button></p></div><p class="sub" style="margin-top:12px">Üye olmadan da <a href="#teklif">numune veya teklif</a> isteyebilirsiniz.</p>';
+else if(st=="beklemede")g.innerHTML='<div class="cd"><h3>Başvurunuz alındı</h3><p>Bilgilerinizi inceliyoruz. Onaylandığında bu sayfada fiyat listesini göreceksiniz.</p><p style="margin-top:12px"><span class="bt" style="margin:0;font-size:12px;padding:6px 14px">Durum: Onay bekliyor</span></p></div>';
+else g.innerHTML='<div class="cd"><h3>'+(st=="reddedildi"?"Başvurunuz onaylanmadı":"Toptan listesi için onay isteyin")+'</h3><p>'+(st=="reddedildi"?"Bilgilerinizi güncelleyip yeniden başvurabilir ya da bizimle iletişime geçebilirsiniz.":"Bilgilerinizi gönderin, kontrol edip size dönelim.")+'</p><div class="f"><label>Firma / kafe adı</label><input id="r_c" value="'+E(CU&&CU.company)+'"><label>Vergi numarası</label><input id="r_t" value="'+E(CU&&CU.tax_no)+'"><label>Telefon</label><input id="r_p" inputmode="tel" value="'+E(CU&&CU.phone)+'"><label>Not (isteğe bağlı)</label><textarea id="r_n" rows="2"></textarea><p class="msg" id="r_s"></p><p><button class="bt p" data-a="req" style="margin-top:10px">Onay iste</button></p></div></div>'}
+function rn(){gate();if(st!="onayli"){bar();return}
+$("cats").innerHTML='<button class="ct'+(!sel?' on':'')+'" data-a="cat" data-i="0"><b>Tümü</b></button>'+C.map(function(c){return'<button class="ct'+(sel==c.id?' on':'')+'" data-a="cat" data-i="'+c.id+'"><b>'+E(c.name)+'</b></button>'}).join("");
+var cc=C.filter(function(c){return c.id==sel})[0];$("ctn").textContent=cc?cc.name:"Tümü";$("cds").hidden=!(cc&&cc.description);$("cds").textContent=cc?cc.description:"";
+$("tw").hidden=!T.length;$("tiers").textContent=T.map(function(r){return F(r.min_total)+" ve üzeri sepete %"+Number(r.pct)}).join(" · ");
+var h="";P.forEach(function(p){if(sel&&p.category_id!=sel)return;var n=q[p.id]||1,ask=p.ask_price,oos=!p.in_stock;
+var tt=(p.tiers||[]).length&&!ask?'<small style="color:var(--tx)">'+p.tiers.map(function(r){return r.min+" adet ve üzeri: "+F(r.price)+" / adet"}).join(" · ")+'</small>':'';
+h+='<div class="it">'+(p.image?'<img src="'+E(p.image)+'" alt="">':'')+'<div style="flex:1;min-width:0"><span class="n">'+E(p.name)+'</span><small>'+E([p.brand,p.unit_label].filter(Boolean).join(" · "))+'</small>'+tt+'</div><div class="qt"><button data-a="pm" data-id="'+p.id+'">−</button><i>'+n+'</i><button data-a="pp" data-id="'+p.id+'">+</button></div><div class="pr'+(ask?' ask':'')+'">'+(ask?'Fiyat sorunuz':F(up(p,n)))+'</div><button class="add" data-a="'+(ask?'qa':'ca')+'" data-id="'+p.id+'"'+(oos?' disabled':'')+'>'+(oos?'Stokta yok':ask?'Teklife ekle':'Ekle')+'</button></div>'});
+$("list").innerHTML=h||'<p class="sub" style="margin-top:16px">Bu kategoride ürün yok.</p>';bar();ql()}
+function bar(){var c=st=="onayli"?calc():{n:0},qn=st=="onayli"?Object.keys(quote).filter(function(i){return pr(i)}).length:0;
+$("cn").textContent=c.n?c.n+" kalem":qn+" kalem teklif listesinde";$("ct2").textContent=c.n?" · "+F(c.t-c.ds):"";
+$("cs").textContent=c.n?((c.d?"%"+c.d+" iskonto uygulandı (−"+F(c.ds)+")":"")+(c.d&&c.nx?" · ":"")+(c.nx?F(Number(c.nx.min_total)-c.t)+" daha ekleyin, %"+Number(c.nx.pct)+" iskonto":"")):"";
+$("cart").classList.toggle("on",c.n>0||qn>0)}
+function ql(){var ks=Object.keys(quote).filter(function(i){return pr(i)});$("ql").innerHTML=ks.length?'<label>Teklif istediğiniz ürünler</label>'+ks.map(function(i){return'<div class="cl"><span>'+quote[i]+' × '+E(pr(i).name)+'</span></div>'}).join(""):""}
+function ocart(){var c=calc(),ks=Object.keys(cart).filter(function(i){return pr(i)}),qs=Object.keys(quote).filter(function(i){return pr(i)}),h="";
+if(ks.length){h+='<div class="k" style="margin:8px 0 2px">Sipariş</div>'+ks.map(function(i){var p=pr(i);return'<div class="cl"><span style="flex:1">'+E(p.name)+'<small style="display:block;color:var(--mu)">'+F(up(p,cart[i]))+' / adet</small></span><span class="qt"><button data-a="cm" data-id="'+i+'">−</button><i>'+cart[i]+'</i><button data-a="cp" data-id="'+i+'">+</button></span><b>'+F(cart[i]*up(p,cart[i]))+'</b><button data-a="cx" data-id="'+i+'" style="background:none;border:0;color:var(--er);cursor:pointer;font-size:16px">×</button></div>'}).join("")
++'<div class="tot"><span>Ara toplam</span><span>'+F(c.t)+'</span></div>'+(c.d?'<div class="tot"><span>%'+c.d+' iskonto</span><span>−'+F(c.ds)+'</span></div>':'')+'<div class="tot b"><span>Toplam (KDV hariç)</span><span>'+F(c.t-c.ds)+'</span></div>'}
+if(qs.length)h+='<div class="k" style="margin:14px 0 2px">Teklif listesi</div>'+qs.map(function(i){return'<div class="cl"><span style="flex:1">'+E(pr(i).name)+'</span><span class="qt"><button data-a="qm" data-id="'+i+'">−</button><i>'+quote[i]+'</i><button data-a="qp" data-id="'+i+'">+</button></span><button data-a="qx" data-id="'+i+'" style="background:none;border:0;color:var(--er);cursor:pointer;font-size:16px">×</button></div>'}).join("");
+$("cb").innerHTML=h||'<p class="sub">Sepetiniz boş.</p>';$("o_o").hidden=!ks.length;$("o_q").hidden=!qs.length;
+$("o_c").value=$("o_c").value||(CU&&CU.company)||"";$("o_p").value=$("o_p").value||(CU&&CU.phone)||"";$("cm").classList.add("on")}
+async function send(kind){var m=$("o_s"),c=$("o_c").value.trim(),p=$("o_p").value.trim();m.className="msg";m.textContent="";if(!c||!p){m.textContent="Firma adı ve telefon gerekli";return}
+var o=kind=="o",src=o?cart:quote,ks=Object.keys(src).filter(function(i){return pr(i)}),cc=calc();
+var items=ks.map(function(i){var x=pr(i);return o?{name:x.name,unit:x.unit_label,qty:src[i],unit_price:up(x,src[i]),line_total:src[i]*up(x,src[i])}:{name:x.name,unit:x.unit_label,qty:src[i]}});
+var msg=(o?"SİPARİŞ TALEBİ · Ara toplam "+cc.t+"₺"+(cc.d?" · İskonto %"+cc.d+" (−"+cc.ds+"₺)":"")+" · Toplam "+(cc.t-cc.ds)+"₺ (KDV hariç)":"TEKLİF TALEBİ")+" · "+($("o_m").value.trim());
+var b=$(o?"o_o":"o_q");b.disabled=true;var r=await sb.rpc("submit_quote",{p_company:c,p_contact:(CU&&CU.full_name)||"",p_phone:p,p_email:(ME&&ME.email)||"",p_message:msg,p_items:items});b.disabled=false;
+if(r.error){m.textContent=trErr(r.error);return}
+if(o)cart={};else quote={};save();m.className="msg ok";m.textContent=o?"Siparişiniz alındı. Sizinle iletişime geçeceğiz.":"Teklif talebiniz alındı. Size dönüş yapacağız.";rn();ocart();$("o_s").className="msg ok";$("o_s").textContent=o?"Siparişiniz alındı. Sizinle iletişime geçeceğiz.":"Teklif talebiniz alındı. Size dönüş yapacağız."}
+document.addEventListener("click",async function(e){var b=e.target.closest("[data-a]");if(!b)return;var a=b.dataset.a,id=b.dataset.id,i=b.dataset.i;
+if(a=="u1")openAuth("1");else if(a=="u2")openAuth("2");
+else if(a=="req"){var m=$("r_s");m.className="msg";m.textContent="";b.disabled=true;var r=await sb.rpc("request_wholesale",{p_company:$("r_c").value,p_tax_no:$("r_t").value,p_phone:$("r_p").value,p_note:$("r_n").value});b.disabled=false;if(r.error)m.textContent=trErr(r.error);else{await ses()}return}
+else if(a=="cat"){sel=+i;rn()}
+else if(a=="pp"){q[id]=(q[id]||1)+1;rn()}else if(a=="pm"){q[id]=Math.max(1,(q[id]||1)-1);rn()}
+else if(a=="ca"){cart[id]=(cart[id]||0)+(q[id]||1);q[id]=1;save();rn()}else if(a=="qa"){quote[id]=(quote[id]||0)+(q[id]||1);q[id]=1;save();rn()}
+else if(a=="cp"){cart[id]++;save();rn();ocart()}else if(a=="cm"){cart[id]=Math.max(1,cart[id]-1);save();rn();ocart()}else if(a=="cx"){delete cart[id];save();rn();ocart()}
+else if(a=="qp"){quote[id]++;save();rn();ocart()}else if(a=="qm"){quote[id]=Math.max(1,quote[id]-1);save();rn();ocart()}else if(a=="qx"){delete quote[id];save();rn();ocart()}});
+$("co").onclick=function(){$("o_s").textContent="";ocart()};$("o_x").onclick=function(){$("cm").classList.remove("on")};$("cm").onclick=function(e){if(e.target==$("cm"))$("cm").classList.remove("on")};
+$("o_o").onclick=function(){send("o")};$("o_q").onclick=function(){send("q")};
+$("t_b").onclick=async function(){var m=$("t_s"),b=this;m.className="msg";m.textContent="";var ks=st=="onayli"?Object.keys(quote).filter(function(i){return pr(i)}):[];
+var items=ks.map(function(i){return{name:pr(i).name,unit:pr(i).unit_label,qty:quote[i]}});b.disabled=true;
+var r=await sb.rpc("submit_quote",{p_company:$("t_c").value,p_contact:$("t_n").value,p_phone:$("t_p").value,p_email:$("t_e").value,p_message:$("t_m").value,p_items:items});b.disabled=false;
+if(r.error){m.textContent=trErr(r.error);return}m.className="msg ok";m.textContent="Talebiniz alındı. Size dönüş yapacağız.";["t_c","t_n","t_p","t_e","t_m"].forEach(function(k){$(k).value=""});if(ks.length){quote={};save();rn()}};
+async function lp(){var a=await Promise.all([sb.from("wholesale_products").select("*").order("category_id").order("sort").order("id"),sb.from("discount_tiers").select("*").order("min_total")]);
+P=a[0].data||[];P.forEach(function(p){p.tiers=(p.tiers||[]).slice().sort(function(x,y){return x.min-y.min})});T=a[1].data||[];
+Object.keys(cart).forEach(function(i){if(!pr(i))delete cart[i]});Object.keys(quote).forEach(function(i){if(!pr(i))delete quote[i]})}
+window.onSession=async function(){var c=await sb.from("site_categories").select("*").eq("scope","wholesale").order("sort");C=c.data||[];
+if(!ME)st="misafir";else{var m=await sb.rpc("is_wholesale_member");if(m.data===true){st="onayli";await lp()}else st=CU&&CU.wholesale_status&&CU.wholesale_status!="yok"?CU.wholesale_status:"yok"}rn()};
+shell("Toptan");
+</script>
+</body>
+</html>
