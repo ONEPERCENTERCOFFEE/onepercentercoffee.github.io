@@ -1,0 +1,15 @@
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}.chips button{font:inherit;font-weight:600;font-size:13px;color:var(--tx);background:none;border:1px solid var(--ln);border-radius:999px;padding:8px 15px;cursor:pointer}.chips .on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
+.grid{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+.pc{display:block;text-decoration:none;background:var(--sf);border:1px solid var(--ln);border-radius:14px;overflow:hidden;position:relative}
+.im{background:radial-gradient(circle at 50% 35%,#262626,#0e0e0e);aspect-ratio:5/6;overflow:hidden}.im svg{width:100%;height:100%;display:block}
+.bd{padding:12px 14px 16px}.bd h3{margin:0;font-size:14.5px;font-weight:800;text-transform:uppercase;line-height:1.2}
+.ori{display:block;color:var(--mu);font-size:12px;margin:3px 0 8px}
+.nt{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 10px}.nt span{border:1px solid var(--tx);border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:600}
+.fr{font-size:12px;color:var(--mu)}.fr b{color:var(--tx);font-size:16px;font-weight:800}
+.bg{position:absolute;top:10px;left:10px;z-index:2;background:var(--tx);color:var(--bg);font-size:11px;font-weight:800;border-radius:999px;padding:3px 10px}
+.bc{font-size:12.5px;color:var(--mu);margin:20px 0}.bc a{text-decoration:none}.bc a:hover{text-decoration:underline}
+.cl{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--ln);font-size:14px}
+.qt{display:flex;align-items:center;gap:6px}.qt button{font:inherit;width:32px;height:32px;border-radius:8px;border:1px solid var(--ln);background:none;color:var(--tx);cursor:pointer}.qt i{min-width:22px;text-align:center;font-style:normal;font-weight:800}
+.tot{display:flex;justify-content:space-between;padding:6px 0;font-size:14px}.tot.b{font-weight:800;font-size:17px;border-top:1px solid var(--tx);margin-top:6px;padding-top:10px}
+#rbar{position:fixed;left:0;right:0;bottom:0;z-index:55;background:var(--tx);color:var(--bg);display:none;justify-content:space-between;align-items:center;gap:10px;padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px))}#rbar.on{display:flex}#rbar button{font:inherit;font-weight:800;color:var(--tx);background:var(--bg);border:0;border-radius:999px;padding:11px 18px;cursor:pointer}
+@media(min-width:760px){.grid{grid-template-columns:repeat(3,1fr)}}

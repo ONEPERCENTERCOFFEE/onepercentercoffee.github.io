@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Çekirdek Kahve | One Percenter Mağaza</title>
+<meta name="description" content="One Percenter çekirdek kahve.">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="retail.css">
+<style>
+.dt{display:grid;gap:22px;margin-bottom:30px}.info label{display:block;margin:16px 0 6px;color:var(--mu);font-size:12px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.sz{display:flex;gap:8px}.sz button{flex:1;font:inherit;font-weight:600;font-size:14px;color:var(--tx);background:none;border:1px solid var(--ln);border-radius:10px;padding:11px 0;cursor:pointer}.sz button.on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
+.info select{width:100%;font:inherit;color:var(--tx);background:#000;border:1px solid var(--ln);border-radius:10px;padding:12px}
+.price{font-size:30px;font-weight:800;margin:4px 0 0}.price small{font-size:12px;color:var(--mu);font-weight:400}
+.buy{display:flex;gap:10px;margin-top:18px}.buy .qt{border:1px solid var(--ln);border-radius:999px}.buy .qt button{width:40px;height:44px;border:0;font-size:18px;border-radius:999px}
+.add{flex:1;font:inherit;font-weight:800;font-size:15px;color:var(--bg);background:var(--tx);border:0;border-radius:999px;cursor:pointer;padding:0 20px}.add:disabled{background:var(--ln);color:var(--mu);cursor:not-allowed}
+.sp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0;padding:12px 0;border-top:1px solid var(--ln);border-bottom:1px solid var(--ln)}.sp dt{color:var(--mu);font-size:11px;text-transform:uppercase;letter-spacing:.06em}.sp dd{margin:3px 0 0;font-weight:600;font-size:14px}
+.th{display:flex;gap:8px;margin-top:8px}.th button{width:64px;height:64px;padding:0;border:1px solid var(--ln);border-radius:8px;overflow:hidden;background:none;cursor:pointer}.th img{width:100%;height:100%;object-fit:cover}
+.sc2{margin:34px 0}.sc2 h2{font-size:22px;padding-bottom:8px;border-bottom:3px solid var(--tx)}.sc2 p{color:#d6d6d6;max-width:680px;margin:0 0 10px}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:10px 6px;border-bottom:1px solid var(--ln);text-align:left}th{color:var(--mu);font-weight:600;font-size:12px;text-transform:uppercase}
+details{border-bottom:1px solid var(--ln);padding:12px 0}summary{cursor:pointer;font-weight:600}details p{margin:8px 0 0}
+@media(min-width:760px){.dt{grid-template-columns:1fr 1fr;align-items:start}}
+</style>
+</head>
+<body>
+<main class="w" id="app"><p class="sub" style="margin-top:30px">Yükleniyor...</p></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="site.js"></script>
+<script src="retail.js"></script>
+<script>
+var cur=null,sz=1,qty=1,mi=0;
+function meta(t,d,j){document.title=t;document.querySelector("meta[name=description]").setAttribute("content",d);var x=$("ld");if(x)x.remove();if(j){x=document.createElement("script");x.type="application/ld+json";x.id="ld";x.textContent=j;document.head.appendChild(x)}}
+function stars(n){return"●".repeat(n)+"○".repeat(5-n)}
+function show(){var p=cur;var im=(p.images||[]);
+var h='<nav class="bc" aria-label="Sayfa yolu"><a href="magaza.html">Mağaza</a> › <a href="magaza.html">Çekirdek kahve</a> › '+E(p.name)+'</nav><div class="dt"><div><div class="im" id="mainim" style="border-radius:14px;border:1px solid var(--ln)">'+(im.length?'<img src="'+E(im[mi]||im[0])+'" alt="'+E(p.name)+' çekirdek kahve" style="width:100%;height:100%;object-fit:cover;display:block">':bag(p))+'</div>'+(im.length>1?'<div class="th">'+im.map(function(u,i){return'<button data-th="'+i+'" type="button" aria-label="Fotoğraf '+(i+1)+'"><img src="'+E(u)+'" alt=""></button>'}).join("")+'</div>':'')+'</div><div class="info"><small class="k">'+E((RC.filter(function(c){return c.id==p.category_id})[0]||{}).name||"Çekirdek kahve")+'</small><h1 style="font-size:clamp(28px,7vw,42px);text-transform:uppercase">'+E(p.name)+'</h1><span class="ori" style="font-size:14px">'+E(p.origin)+'</span>'
++((p.notes||[]).length?'<div class="nt">'+p.notes.map(function(n){return'<span>'+E(n)+'</span>'}).join("")+'</div>':'')+'<div class="price" id="pp"></div>'
++'<label>Boyut</label><div class="sz">'+SZ.map(function(s,i){return'<button data-z="'+i+'" type="button" class="'+(i==sz?'on':'')+'">'+s+'</button>'}).join("")+'</div><label for="gr">Öğütme</label><select id="gr">'+GR.map(function(g){return'<option>'+g+'</option>'}).join("")+'</select>'
++'<div class="buy"><div class="qt"><button data-q="-1" type="button" aria-label="Azalt">−</button><i id="qn">'+qty+'</i><button data-q="1" type="button" aria-label="Artır">+</button></div><button class="add" id="addb" type="button"'+(p.in_stock?'':' disabled')+'>'+(p.in_stock?'Sepete ekle':'Tükendi')+'</button></div><p class="msg ok" id="am2"></p>'
++'<dl class="sp"><div><dt>İşlem</dt><dd>'+E(p.process||"—")+'</dd></div><div><dt>Rakım</dt><dd>'+E(p.altitude||"—")+'</dd></div><div><dt>Kavurma</dt><dd><span role="img" aria-label="Kavurma seviyesi '+(p.roast||0)+' / 5" style="letter-spacing:2px">'+stars(p.roast||0)+'</span></dd></div></dl></div></div>';
+if(p.story)h+='<section class="sc2"><h2>'+E(p.name)+' hakkında</h2><p>'+E(p.story)+'</p></section>';
+if((p.brew||[]).length)h+='<section class="sc2"><h2>Önerilen demleme</h2><table><tr><th>Yöntem</th><th>Oran</th><th>Öğütme</th><th>Süre</th></tr>'+p.brew.map(function(r){return'<tr>'+r.map(function(c){return'<td>'+E(c)+'</td>'}).join("")+'</tr>'}).join("")+'</table></section>';
+if((p.faq||[]).length)h+='<section class="sc2"><h2>Sık sorulanlar</h2>'+p.faq.map(function(q){return'<details><summary>'+E(q.q)+'</summary><p>'+E(q.a)+'</p></details>'}).join("")+'</section>';
+var o=R.filter(function(x){return x.id!=p.id&&x.visible!==false}).slice(0,3);if(o.length)h+='<section class="sc2"><h2>Diğer kahveler</h2><div class="grid">'+o.map(pcard).join("")+'</div></section>';
+$("app").innerHTML=h;pr()}
+function pr(){$("pp").innerHTML=F(sp(cur,sz))+' <small>KDV dahil · '+SZ[sz]+'</small>'}
+function nf(){$("app").innerHTML='<section class="hero"><h1>ÜRÜN BULUNAMADI</h1><p class="lead">Aradığınız kahve kaldırılmış ya da adresi değişmiş olabilir.</p><a class="bt p" href="magaza.html">Tüm kahveleri gör</a></section>';meta("Ürün bulunamadı | One Percenter","Aradığınız ürün bulunamadı.","")}
+document.addEventListener("click",function(e){var b=e.target.closest("button");if(!b||!cur)return;var d=b.dataset;
+if(d.z!=null){sz=+d.z;[].forEach.call(document.querySelectorAll(".sz button"),function(x){x.classList.toggle("on",x==b)});pr()}
+else if(d.q){qty=Math.max(1,qty+ +d.q);$("qn").textContent=qty}
+else if(d.th!=null){mi=+d.th;var u=cur.images[mi];$("mainim").innerHTML='<img src="'+E(u)+'" alt="'+E(cur.name)+' çekirdek kahve" style="width:100%;height:100%;object-fit:cover;display:block">'}
+else if(b.id=="addb"){cadd(cur.id,sz,$("gr").value,qty);$("am2").textContent=qty+" × "+cur.name+" ("+SZ[sz]+") sepete eklendi.";qty=1;$("qn").textContent=1}});
+(async function(){shell("Mağaza");rinit();await lr();var s=new URLSearchParams(location.search).get("s");cur=R.filter(function(p){return p.slug==s&&p.visible!==false})[0];
+if(!cur){nf();return}
+var no=cur.seo_title||(cur.name+" Çekirdek Kahve"+(cur.origin?" ("+String(cur.origin).split(" · ")[0]+")":"")+" | One Percenter"),de=cur.seo_desc||(cur.name+": "+(cur.notes||[]).join(", ")+" notalı"+(cur.process?", "+String(cur.process).toLowerCase()+" işlemli":"")+" çekirdek kahve. 100 g, 250 g ve 1 kg seçenekleri.");
+var ld=JSON.stringify({"@context":"https://schema.org","@type":"Product","name":cur.name+" Çekirdek Kahve","description":de,"image":(cur.images||[]).slice(0,5),"brand":{"@type":"Brand","name":"One Percenter"},"offers":SZ.map(function(z,i){return{"@type":"Offer","name":z,"priceCurrency":"TRY","price":sp(cur,i),"availability":cur.in_stock?"https://schema.org/InStock":"https://schema.org/OutOfStock","url":location.href}})});
+meta(no,de,ld);show()})();
+</script>
+</body>
+</html>
