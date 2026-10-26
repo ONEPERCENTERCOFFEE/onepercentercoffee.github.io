@@ -22,9 +22,11 @@ jobs:
           node-version: 20
       - name: Sayfaları üret
         run: node build/build.mjs
+        env:
+          OUT: ${{ runner.temp }}/_site
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: ${{ runner.temp }}/_site
   deploy:
     needs: build
     runs-on: ubuntu-latest
