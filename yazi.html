@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Blog | One Percenter</title>
+<meta name="description" content="One Percenter blog.">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="retail.css">
+<style>
+.art{max-width:680px}.art h2{font-size:22px;margin:30px 0 10px}.art p,.art li{color:#d6d6d6}.art li{margin-bottom:6px}.art img{border-radius:12px}
+.bx2{background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:18px;margin:30px 0}
+</style>
+</head>
+<body>
+<main class="w" id="app"><p class="sub" style="margin-top:30px">Yükleniyor...</p></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="art.js"></script>
+<script src="site.js"></script>
+<script>
+function kind(s){return/v60|demle/.test(s)?"dripper":/natural|islem|mense/.test(s)?"beans":"cup"}
+function clean(h){try{var d=new DOMParser().parseFromString(h,"text/html");d.querySelectorAll("script,iframe,object,embed,style,link,meta,form").forEach(function(n){n.remove()});d.querySelectorAll("*").forEach(function(n){[].slice.call(n.attributes).forEach(function(a){if(/^on/i.test(a.name)||(/^(href|src|xlink:href)$/i.test(a.name)&&/^\s*javascript:/i.test(a.value)))n.removeAttribute(a.name)})});return d.body.innerHTML}catch(e){return E(h)}}
+function meta(t,d,j){document.title=t;document.querySelector("meta[name=description]").setAttribute("content",d);var x=document.getElementById("ld");if(x)x.remove();if(j){x=document.createElement("script");x.type="application/ld+json";x.id="ld";x.textContent=j;document.head.appendChild(x)}}
+function dt(s){return s?new Date(s).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}):""}
+(async function(){shell("Blog");var s=new URLSearchParams(location.search).get("s");
+var a=await Promise.all([sb.from("blog_posts").select("*").eq("slug",s||"").maybeSingle(),sb.from("blog_posts").select("slug,title,excerpt,category,cover").order("published_at",{ascending:false}).limit(12)]),p=a[0].data,o=(a[1].data||[]).filter(function(x){return!p||x.slug!=p.slug}).slice(0,3);
+if(!p){$("app").innerHTML='<section class="hero"><h1>YAZI BULUNAMADI</h1><p class="lead">Aradığınız yazı kaldırılmış ya da adresi değişmiş olabilir.</p><a class="bt p" href="blog.html">Tüm yazılar</a></section>';meta("Yazı bulunamadı | One Percenter","Aradığınız yazı bulunamadı.","");return}
+var de=p.seo_desc||p.excerpt||"",ti=p.seo_title||(p.title+" | One Percenter");
+meta(ti,de,JSON.stringify({"@context":"https://schema.org","@type":"Article","headline":p.title,"description":de,"datePublished":p.published_at,"dateModified":p.updated_at||p.published_at,"image":p.cover?[p.cover]:undefined,"author":{"@type":"Organization","name":"One Percenter"},"publisher":{"@type":"Organization","name":"One Percenter","logo":{"@type":"ImageObject","url":location.origin+"/logo.png"}},"mainEntityOfPage":location.href}));
+$("app").innerHTML='<nav class="bc" aria-label="Sayfa yolu"><a href="/">Ana sayfa</a> › <a href="blog.html">Blog</a> › '+E(p.title)+'</nav><article class="art"><span class="k">'+E(p.category||"")+'</span><h1 style="font-size:clamp(28px,7vw,46px)">'+E(p.title)+'</h1><p class="sub" style="margin:12px 0 22px">'+dt(p.published_at)+' · One Percenter</p>'+pic(p.cover,kind(p.slug),"16/9",p.title)+'<div style="margin-top:22px">'+clean(p.body||"")+'</div><div class="bx2"><span class="k">Kahvelerimize göz atın</span><p style="margin:6px 0 12px">Kendi atölyemizde kavurduğumuz tek menşe ve espresso kahveler.</p><a class="bt p" href="magaza.html" style="margin:0">Mağazaya git</a></div></article>'
++(o.length?'<section class="sec" style="margin-top:34px"><h2>Diğer yazılar</h2><div class="g3" style="margin-top:16px">'+o.map(function(x){return'<a class="pil" href="yazi.html?s='+E(x.slug)+'"><span class="k">'+E(x.category||"")+'</span><h3 style="font-size:17px;text-transform:none;margin-top:4px;line-height:1.25">'+E(x.title)+'</h3><p style="margin:0">'+E(x.excerpt||"")+'</p></a>'}).join("")+'</div></section>':'')})();
+</script>
+</body>
+</html>
