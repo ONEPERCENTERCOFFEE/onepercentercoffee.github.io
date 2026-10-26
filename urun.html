@@ -50,7 +50,7 @@ if(d.z!=null){sz=+d.z;[].forEach.call(document.querySelectorAll(".sz button"),fu
 else if(d.q){qty=Math.max(1,qty+ +d.q);$("qn").textContent=qty}
 else if(d.th!=null){mi=+d.th;var u=cur.images[mi];$("mainim").innerHTML='<img src="'+E(u)+'" alt="'+E(cur.name)+' çekirdek kahve" style="width:100%;height:100%;object-fit:cover;display:block">'}
 else if(b.id=="addb"){cadd(cur.id,sz,$("gr").value,qty);$("am2").textContent=qty+" × "+cur.name+" ("+SZ[sz]+") sepete eklendi.";qty=1;$("qn").textContent=1}});
-(async function(){shell("Mağaza");rinit();await lr();var s=new URLSearchParams(location.search).get("s");cur=R.filter(function(p){return p.slug==s&&p.visible!==false})[0];
+(async function(){shell("Mağaza");rinit();await lr();var s=new URLSearchParams(location.search).get("s")||decodeURIComponent((location.pathname.match(/^\/magaza\/([^\/]+)/)||[])[1]||"");cur=R.filter(function(p){return p.slug==s&&p.visible!==false})[0];
 if(!cur){nf();return}
 var no=cur.seo_title||(cur.name+" Çekirdek Kahve"+(cur.origin?" ("+String(cur.origin).split(" · ")[0]+")":"")+" | One Percenter"),de=cur.seo_desc||(cur.name+": "+(cur.notes||[]).join(", ")+" notalı"+(cur.process?", "+String(cur.process).toLowerCase()+" işlemli":"")+" çekirdek kahve. 100 g, 250 g ve 1 kg seçenekleri.");
 var ld=JSON.stringify({"@context":"https://schema.org","@type":"Product","name":cur.name+" Çekirdek Kahve","description":de,"image":(cur.images||[]).slice(0,5),"brand":{"@type":"Brand","name":"One Percenter"},"offers":SZ.map(function(z,i){return{"@type":"Offer","name":z,"priceCurrency":"TRY","price":sp(cur,i),"availability":cur.in_stock?"https://schema.org/InStock":"https://schema.org/OutOfStock","url":location.href}})});
