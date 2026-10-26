@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Blog | One Percenter</title>
-<meta name="description" content="Demleme rehberleri, kahve bilgisi ve atölyeden notlar. One Percenter blog.">
+<meta name="description" content="Demleme rehberleri, kahve bilgisi ve atölyeden notlar. One Percenter blog."><link rel="canonical" href="https://onepercenter.com.tr/blog.html"><meta property="og:type" content="website"><meta property="og:site_name" content="One Percenter"><meta property="og:title" content="Blog | One Percenter"><meta property="og:description" content="Demleme rehberleri, kahve bilgisi ve atölyeden notlar. One Percenter blog."><meta property="og:url" content="https://onepercenter.com.tr/blog.html"><meta property="og:image" content="https://onepercenter.com.tr/og.png"><meta name="twitter:card" content="summary_large_image">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css">
 <link rel="stylesheet" href="retail.css">
@@ -24,7 +24,7 @@ function kind(s){return/v60|demle/.test(s)?"dripper":/natural|islem|mense/.test(
 function rn(){var cs=[];P.forEach(function(p){if(p.category&&cs.indexOf(p.category)<0)cs.push(p.category)});
 $("chips").innerHTML=cs.length>1?'<button data-c="" class="'+(!cat?'on':'')+'">Tümü</button>'+cs.map(function(c){return'<button data-c="'+E(c)+'" class="'+(cat==c?'on':'')+'">'+E(c)+'</button>'}).join(""):"";
 var L=P.filter(function(p){return!cat||p.category==cat});
-$("list").innerHTML=L.length?L.map(function(p){return'<a class="pil" href="/blog/'+E(p.slug)+'/">'+pic(p.cover,kind(p.slug),"16/10",p.title)+'<span class="k">'+E(p.category||"")+'</span><h3 style="font-size:17px;text-transform:none;margin-top:4px;line-height:1.25">'+E(p.title)+'</h3><p style="margin:0 0 10px">'+E(p.excerpt||"")+'</p><span class="k" style="text-transform:none;letter-spacing:0">'+(p.published_at?new Date(p.published_at).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}):"")+'</span></a>'}).join(""):'<p class="sub">Henüz yazı yok.</p>'}
+$("list").innerHTML=L.length?L.map(function(p){return'<a class="pil" href="blog/'+E(p.slug)+'/">'+pic(p.cover,kind(p.slug),"16/10",p.title)+'<span class="k">'+E(p.category||"")+'</span><h3 style="font-size:17px;text-transform:none;margin-top:4px;line-height:1.25">'+E(p.title)+'</h3><p style="margin:0 0 10px">'+E(p.excerpt||"")+'</p><span class="k" style="text-transform:none;letter-spacing:0">'+(p.published_at?new Date(p.published_at).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}):"")+'</span></a>'}).join(""):'<p class="sub">Henüz yazı yok.</p>'}
 $("chips").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;cat=b.dataset.c;rn()});
 (async function(){shell("Blog");var r=await sb.from("blog_posts").select("slug,title,excerpt,category,cover,published_at").order("published_at",{ascending:false}).limit(100);P=r.data||[];rn()})();
 </script>

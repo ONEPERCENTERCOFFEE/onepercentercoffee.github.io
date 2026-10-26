@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>One Percenter | Kahve Kavurmahanesi, OP Cafe ve Toptan Kahve</title>
-<meta name="description" content="One Percenter: kendi atölyemizde kavurduğumuz kahve, OP Cafe, kafeler için toptan kahve ve bar ürünleri, evde demleme için çekirdek kahve mağazası.">
+<meta name="description" content="One Percenter: kendi atölyemizde kavurduğumuz kahve, OP Cafe, kafeler için toptan kahve ve bar ürünleri, evde demleme için çekirdek kahve mağazası."><link rel="canonical" href="https://onepercenter.com.tr/"><meta property="og:type" content="website"><meta property="og:site_name" content="One Percenter"><meta property="og:title" content="One Percenter | Kahve Kavurmahanesi, OP Cafe ve Toptan Kahve"><meta property="og:description" content="One Percenter: kendi atölyemizde kavurduğumuz kahve, OP Cafe, kafeler için toptan kahve ve bar ürünleri, evde demleme için çekirdek kahve mağazası."><meta property="og:url" content="https://onepercenter.com.tr/"><meta property="og:image" content="https://onepercenter.com.tr/og.png"><meta name="twitter:card" content="summary_large_image">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css">
 <link rel="stylesheet" href="retail.css">
@@ -35,7 +35,7 @@ $("pil").innerHTML=[["kavurmahane.html","Kavurmahane",d.kav_text,d.kav_img,"roas
 $("m_t").textContent=d.magaza_title;$("m_p").textContent=d.magaza_text;
 var pr=R.filter(function(p){return p.visible!==false}).sort(function(x,y){return(y.in_stock?1:0)-(x.in_stock?1:0)}).slice(0,3);$("m_g").innerHTML=pr.map(pcard).join("");$("m_g").parentNode.parentNode.hidden=!pr.length;
 $("b_t").textContent=d.band_title;$("b_p").textContent=d.band_text;$("b_l").innerHTML=(d.band_list||[]).map(function(x){return'<li>'+E(x[0])+'</li>'}).join("");
-if(bl.length){$("blogw").hidden=false;$("b_g").innerHTML=bl.map(function(p){return'<a class="pil" href="yazi.html?s='+E(p.slug)+'">'+pic(p.cover,"cup","16/10",p.title)+'<span class="k">'+E(p.category||"")+'</span><h3 style="font-size:17px;text-transform:none;margin-top:4px">'+E(p.title)+'</h3><p style="margin:0">'+E(p.excerpt||"")+'</p></a>'}).join("")}
+if(bl.length){$("blogw").hidden=false;$("b_g").innerHTML=bl.map(function(p){return'<a class="pil" href="blog/'+E(p.slug)+'/">'+pic(p.cover,"cup","16/10",p.title)+'<span class="k">'+E(p.category||"")+'</span><h3 style="font-size:17px;text-transform:none;margin-top:4px">'+E(p.title)+'</h3><p style="margin:0">'+E(p.excerpt||"")+'</p></a>'}).join("")}
 })();
 </script>
 </body>
