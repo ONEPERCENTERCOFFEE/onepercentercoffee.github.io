@@ -36,3 +36,5 @@ footer{border-top:1px solid var(--ln);padding:28px 0 90px;color:var(--mu);font-s
 .band{background:var(--tx);color:var(--bg);padding:48px 0;margin-top:40px}.band p{color:#333}.band ul{padding:0;list-style:none;margin:0 0 22px}.band li{padding:9px 0;border-bottom:1px solid #ccc;font-weight:600}.band .bt{border-color:var(--bg);color:var(--bg)}.band .bt.p{background:var(--bg);color:var(--tx)}
 .ann{background:var(--tx);color:var(--bg);text-align:center;font-size:13px;font-weight:600;padding:8px 14px}
 @media(min-width:760px){.row2{grid-template-columns:1fr 1fr;align-items:center}}
+.legal{padding-bottom:30px}.legal h1{font-size:clamp(26px,6vw,40px);margin:26px 0 6px;line-height:1.05}.legal h2{font-size:19px;margin:28px 0 8px}.legal p,.legal li{color:#d6d6d6;font-size:14.5px;max-width:760px}.legal li{margin-bottom:5px}.legal [data-l]{font-weight:600;color:var(--tx)}
+.legal table{width:100%;max-width:760px;border-collapse:collapse;font-size:14px;margin:10px 0}.legal td{padding:8px 6px;border-bottom:1px solid var(--ln);vertical-align:top}.legal td:first-child{color:var(--mu);width:34%}
