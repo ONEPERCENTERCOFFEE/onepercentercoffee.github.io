@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<base href="/">
+<title>Sayfa bulunamadı | One Percenter</title>
+<meta name="description" content="Aradığınız sayfa bulunamadı.">
+<meta name="robots" content="noindex">
+<script>
+var m=location.pathname.match(/^\/(magaza|blog)\/([^\/]+)\/?$/);
+if(m)location.replace((m[1]=="magaza"?"/urun.html?s=":"/yazi.html?s=")+m[2]);
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<main class="w">
+<section class="hero"><small class="k">404</small><h1>SAYFA BULUNAMADI</h1><p class="lead">Aradığınız sayfa kaldırılmış, adı değişmiş ya da hiç var olmamış olabilir.</p><a class="bt p" href="/">Ana sayfaya dön</a> <a class="bt" href="/magaza.html">Mağazaya git</a></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="site.js"></script>
+<script>shell("")</script>
+</body>
+</html>
