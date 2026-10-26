@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OP Cafe | One Percenter Kafe</title>
+<meta name="description" content="OP Cafe: kahve, müzik, oyun ve arka bahçe. Menü, adres ve çalışma saatleri.">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<main>
+<section class="hero"><div class="w"><span class="k">OP Cafe</span><h1 id="t"></h1><p class="lead" id="p"></p></div></section>
+<div class="w" id="hi"></div>
+<section class="sec"><div class="w"><div class="row2"><div id="g_i"></div><div><span class="k" id="g_k"></span><h2 id="g_t" style="margin-top:6px"></h2><p id="g_p"></p><a class="bt p" href="menu/">Menüye bak</a></div></div></div></section>
+<section class="sec"><div class="w"><h2>Burada neler oluyor?</h2><div class="g3" id="ev" style="margin-top:18px"></div></div></section>
+<section class="sec"><div class="w"><div class="row2"><div><h2>Bize uğrayın</h2><p id="ad"></p><div id="hr"></div><p style="margin-top:16px"><a class="bt p" id="yt" href="#" rel="noopener" hidden>Yol tarifi</a><a class="bt" id="ig" href="#" rel="noopener">Instagram</a></p></div><div id="mp"></div></div></div></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="art.js"></script>
+<script src="site.js"></script>
+<script>
+var DEF={title:"SAFE\nPLACE.",intro:"Dış dünyanın bitmek bilmeyen stresini ve gürültüsünü kapının ardında bırakın. Burası sadece kahve içip gideceğiniz bir yer değil.",hero_img:"",
+garden_kicker:"Önden görünmeyen kısım",garden_title:"Asıl yer arkada.",garden_text:"Mekânın arkasında bir bahçemiz var. Müzik, oyun, sohbet ve soğuk bir kahve için.",garden_img:"",
+events:[["Müzik","Birlikte müzik yaptığımız geceler."],["Oyun","Masa oyunları ve oyun geceleri."],["Fikir","Yeni şeyler ürettiğimiz, fikirleri tokuşturduğumuz bir alan."]],maps_url:"",map_img:""};
+function fill(s,d){var ad=s.address||"";$("ad").innerHTML=ad?br(ad):"";$("hr").innerHTML=(s.hours||[]).map(function(h){return'<div class="tm"><span>'+E(h[0])+'</span><b>'+E(h[1]||"")+'</b></div>'}).join("");
+var u=d.maps_url||(ad?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(ad):"");$("yt").hidden=!u;if(u)$("yt").href=u;$("ig").href="https://instagram.com/"+(s.instagram||"onepercentercoffeeco");
+var j={"@context":"https://schema.org","@type":"CafeOrCoffeeShop","name":"OP Cafe","url":location.origin+"/op-cafe.html","image":location.origin+"/logo.png","sameAs":["https://instagram.com/"+(s.instagram||"onepercentercoffeeco")]};
+if(ad)j.address={"@type":"PostalAddress","streetAddress":ad,"addressCountry":"TR"};if(s.phone)j.telephone=s.phone;
+var x=document.getElementById("ld");if(x)x.remove();x=document.createElement("script");x.type="application/ld+json";x.id="ld";x.textContent=JSON.stringify(j);document.head.appendChild(x)}
+(async function(){var d=await pc("opcafe",DEF);window.onSite=function(s){fill(s,d)};shell("OP Cafe");
+$("t").innerHTML=br(d.title);$("p").textContent=d.intro;$("hi").innerHTML=pic(d.hero_img,"vinyl","21/9","OP Cafe");
+$("g_i").innerHTML=pic(d.garden_img,"garden","4/3","Arka bahçe");$("g_k").textContent=d.garden_kicker;$("g_t").textContent=d.garden_title;$("g_p").textContent=d.garden_text;
+$("ev").innerHTML=(d.events||[]).map(function(e){return'<div class="cd"><h3>'+E(e[0])+'</h3><p>'+E(e[1]||"")+'</p></div>'}).join("");
+$("mp").innerHTML=pic(d.map_img,"map","4/3","Harita")})();
+</script>
+</body>
+</html>

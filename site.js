@@ -2,6 +2,13 @@ var sb=supabase.createClient("https://ojfmpnqyrdfybbmchbvq.supabase.co","sb_publ
 var $=function(i){return document.getElementById(i)};
 function E(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function F(n){n=Number(n);return n.toLocaleString("tr-TR",{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2})+"₺"}
+function br(s){return E(s).replace(/\n/g,"<br>")}
+async function pc(key,def){var r=await sb.from("page_content").select("value").eq("key",key).maybeSingle();return Object.assign({},def,(r.data&&r.data.value)||{})}
+function pic(u,k,r,alt){return'<div class="pic" style="aspect-ratio:'+r+'">'+(u?'<img src="'+E(u)+'" alt="'+E(alt||"")+'" loading="lazy">':(window.ar?ar(k):""))+'</div>'}
+var SITE={address:"",hours:[],phone:"",email:"",instagram:"onepercentercoffeeco",announce:""};
+async function loadSite(){var s=await pc("site",SITE);SITE=s;var ft=$("ft");
+if(ft)ft.innerHTML=(s.address?br(s.address)+"<br>":"")+((s.hours||[]).length?s.hours.map(function(h){return E(h.join(" "))}).join(" · ")+"<br>":"")+(s.phone?'<a href="tel:'+E(String(s.phone).replace(/\s/g,""))+'">'+E(s.phone)+'</a>':"")+(s.email?'<a href="mailto:'+E(s.email)+'">'+E(s.email)+'</a>':"")+'<br><a href="https://instagram.com/'+E(s.instagram)+'" rel="noopener">@'+E(s.instagram)+'</a><a href="menu/">Menü</a>';
+if(s.announce)document.body.insertAdjacentHTML("afterbegin",'<div class="ann">'+E(s.announce)+'</div>');if(window.onSite)window.onSite(s)}
 var ME=null,CU=null,NAV=[["Kavurmahane","kavurmahane.html"],["OP Cafe","op-cafe.html"],["Toptan","toptan.html"],["Mağaza","magaza.html"],["Blog","blog.html"]];
 function trErr(e){var m=(e&&e.message)||String(e);
 if(/Invalid login/i.test(m))return"E-posta ya da şifre yanlış";if(/not confirmed/i.test(m))return"E-postanızı doğrulamanız gerekiyor. Gelen kutunuza ve spam klasörüne bakın.";
@@ -19,7 +26,7 @@ document.body.insertAdjacentHTML("afterbegin",'<header><div class="w"><a href="i
 +'<div class="f" id="f2" hidden><label>E-posta</label><input id="l_e" type="email" autocomplete="email"><label>Şifre</label><input id="l_w" type="password" autocomplete="current-password"><p class="msg" id="m2"></p><p style="margin:10px 0 0"><button class="bt p" id="b2" type="button" style="margin:0 8px 0 0">Giriş yap</button><button id="b3" type="button" style="font:inherit;font-size:13px;color:var(--mu);background:none;border:0;cursor:pointer;text-decoration:underline">Şifremi unuttum</button></p></div><div id="ts_m" style="margin:12px 0 0"></div></div>'
 +'<div id="ac" hidden><h3 style="margin:0 0 6px">Hesabım</h3><p id="ai" class="sub" style="margin:0 0 14px"></p><p><button class="bt" id="bo" type="button" style="margin:0">Çıkış yap</button></p></div>'
 +'<p style="margin:14px 0 0"><button class="bt" id="mx" type="button" style="margin:0;font-size:13px;padding:8px 16px">Kapat</button></p></div></div>');
-document.body.insertAdjacentHTML("beforeend",'<footer><div class="w"><img alt="One Percenter" src="logo.png"><div>[Adres] · [Çalışma saatleri]<br><a href="https://instagram.com/onepercentercoffeeco" rel="noopener">@onepercentercoffeeco</a></div></div></footer>');
+document.body.insertAdjacentHTML("beforeend",'<footer><div class="w"><img alt="One Percenter" src="logo.png"><div id="ft">@onepercentercoffeeco</div></div></footer>');
 var ov=$("ov"),am=$("am");
 $("op").onclick=function(){ov.classList.add("on")};$("cl").onclick=function(){ov.classList.remove("on")};
 $("mx").onclick=function(){am.classList.remove("on")};am.onclick=function(e){if(e.target==am)am.classList.remove("on")};
@@ -37,7 +44,7 @@ var r=await sb.auth.resetPasswordForEmail(e,{redirectTo:location.origin+location
 $("bo").onclick=async function(){await sb.auth.signOut();am.classList.remove("on")};
 document.addEventListener("click",function(e){if(e.target.tagName=="A"&&ov.classList.contains("on"))ov.classList.remove("on")});
 sb.auth.onAuthStateChange(function(ev){if(ev=="SIGNED_IN"||ev=="SIGNED_OUT"||ev=="USER_UPDATED")ses()});
-ses()}
+ses();loadSite()}
 function tabAuth(t){$("f1").hidden=t!="1";$("f2").hidden=t!="2";[].forEach.call(document.querySelectorAll(".tb2 button"),function(b){b.classList.toggle("on",b.dataset.t==t)})}
 function openAuth(t){$("am").classList.add("on");$("au").hidden=!!ME;$("ac").hidden=!ME;if(ME){var s=CU?({yok:"Toptan listesi için onay istenmedi",beklemede:"Toptan başvurunuz inceleniyor",onayli:"Toptan listesine erişiminiz açık",reddedildi:"Toptan başvurunuz onaylanmadı"})[CU.wholesale_status]:"";$("ai").innerHTML=E(ME.email)+(s?"<br>"+s:"")}else{tabAuth(t||"2");tsm()}}
 async function ses(){var s=(await sb.auth.getSession()).data.session;ME=s?s.user:null;CU=null;

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>One Percenter | Kahve Kavurmahanesi, OP Cafe ve Toptan Kahve</title>
+<meta name="description" content="One Percenter: kendi atölyemizde kavurduğumuz kahve, OP Cafe, kafeler için toptan kahve ve bar ürünleri, evde demleme için çekirdek kahve mağazası.">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="retail.css">
+</head>
+<body>
+<main>
+<section class="hero"><div class="w"><h1 id="h_t"></h1><p class="lead" id="h_p"></p><a class="bt p" href="magaza.html">Kahveleri keşfet</a><a class="bt" href="toptan.html">Toptan satış</a></div></section>
+<div class="w" id="h_i"></div>
+<section class="sec"><div class="w"><h2>Üç kol, tek yer</h2><p class="sub">Aynı atölyeden çıkıyor, üç farklı şekilde karşınıza geliyor.</p><div class="g3" id="pil"></div></div></section>
+<section class="sec"><div class="w"><h2 id="m_t"></h2><p class="sub" id="m_p"></p><div class="grid" id="m_g"></div><p style="margin-top:18px"><a class="bt" href="magaza.html">Tüm kahveler</a></p></div></section>
+<section class="band"><div class="w"><h2 id="b_t"></h2><p class="sub" id="b_p" style="color:#333"></p><ul id="b_l"></ul><a class="bt p" href="toptan.html">Toptan kataloğu</a><a class="bt" href="toptan.html#teklif">Numune iste</a></div></section>
+<section class="sec" id="blogw" hidden style="border-top:0"><div class="w"><h2>Blog</h2><p class="sub">Demleme, menşe, kavurma ve atölyeden notlar.</p><div class="g3" id="b_g"></div></div></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="art.js"></script>
+<script src="site.js"></script>
+<script src="retail.js"></script>
+<script>
+var DEF={hero_title:"KAVURUYORUZ.\nPAYLAŞIYORUZ.",hero_text:"Yeşil çekirdekten fincana giden o uzun yolu kendi atölyemizde çiziyoruz. Kendi kurallarımızı da kendimiz yazıyoruz.",hero_img:"",
+kav_text:"Her partiyi kendimiz seçiyor, kavuruyor ve tadıyoruz.",kav_img:"",cafe_text:"Müzik, oyun, fikir ve iyi kahve. Kapının ardında bir safe place.",cafe_img:"",toptan_text:"Barınız için kahveden ekipmana her şey, üyelerimize özel fiyatlarla.",toptan_img:"",
+magaza_title:"Evde de bizim kahve",magaza_text:"Taze kavrulmuş çekirdek kahve. Boyutu seçin, kapınıza gelsin.",
+band_title:"Barınızın ihtiyacı olan her şey",band_text:"Kahveden süt ve şuruba, bardaktan makineye: bir cafe barında kullanılan ürünler tek yerde, üyelerimize özel fiyatlarla.",
+band_list:[["Kendi kavurduğumuz çekirdek kahve"],["Süt, şurup, sos, çay ve matcha"],["Bardak, ambalaj ve sarf malzemeleri"],["Bar ekipmanı, makine ve değirmen"]]};
+(async function(){shell("");
+var a=await Promise.all([pc("home",DEF),lr(),sb.from("blog_posts").select("slug,title,excerpt,category,cover,published_at").order("published_at",{ascending:false}).limit(3)]),d=a[0],bl=a[2].data||[];
+$("h_t").innerHTML=br(d.hero_title);$("h_p").textContent=d.hero_text;$("h_i").innerHTML=pic(d.hero_img,"cup","21/9","One Percenter");
+$("pil").innerHTML=[["kavurmahane.html","Kavurmahane",d.kav_text,d.kav_img,"roaster","Hikâyeyi oku →"],["op-cafe.html","OP Cafe",d.cafe_text,d.cafe_img,"garden","Bizi tanıyın →"],["toptan.html","Toptan",d.toptan_text,d.toptan_img,"beans","Fiyat listesi →"]].map(function(x){return'<a class="pil" href="'+x[0]+'">'+pic(x[3],x[4],"4/3",x[1])+'<h3>'+x[1]+'</h3><p>'+E(x[2])+'</p><b>'+x[5]+'</b></a>'}).join("");
+$("m_t").textContent=d.magaza_title;$("m_p").textContent=d.magaza_text;
+var pr=R.filter(function(p){return p.visible!==false}).sort(function(x,y){return(y.in_stock?1:0)-(x.in_stock?1:0)}).slice(0,3);$("m_g").innerHTML=pr.map(pcard).join("");$("m_g").parentNode.parentNode.hidden=!pr.length;
+$("b_t").textContent=d.band_title;$("b_p").textContent=d.band_text;$("b_l").innerHTML=(d.band_list||[]).map(function(x){return'<li>'+E(x[0])+'</li>'}).join("");
+if(bl.length){$("blogw").hidden=false;$("b_g").innerHTML=bl.map(function(p){return'<a class="pil" href="yazi.html?s='+E(p.slug)+'">'+pic(p.cover,"cup","16/10",p.title)+'<span class="k">'+E(p.category||"")+'</span><h3 style="font-size:17px;text-transform:none;margin-top:4px">'+E(p.title)+'</h3><p style="margin:0">'+E(p.excerpt||"")+'</p></a>'}).join("")}
+})();
+</script>
+</body>
+</html>

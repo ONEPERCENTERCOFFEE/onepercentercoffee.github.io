@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kavurmahane | One Percenter</title>
+<meta name="description" content="Yeşil çekirdekten fincana: One Percenter kavurmahanesinde kahveyi seçiyor, kavuruyor ve tadıyoruz. Tek menşe ve espresso çekirdek kahveler.">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<main>
+<section class="hero"><div class="w"><span class="k">Kavurmahane</span><h1 id="t"></h1><p class="lead" id="p"></p></div></section>
+<div class="w" id="hi"></div>
+<section class="sec"><div class="w"><h2>Nasıl çalışıyoruz?</h2><div class="g3" id="st" style="margin-top:18px"></div></div></section>
+<section class="sec"><div class="w"><div class="row2"><div><h2 id="s_t"></h2><div id="s_p"></div></div><div id="s_i"></div></div></div></section>
+<section class="sec"><div class="w"><h2>Kahvelerimiz</h2><p class="sub">Tek menşe ve espresso kahvelerimizi mağazadan sipariş edebilirsiniz.</p><a class="bt p" href="magaza.html">Mağazaya git</a></div></section>
+<section class="band"><div class="w"><h2>Kafenize kahve mi arıyorsunuz?</h2><p class="sub" style="color:#333">Kendi kavurduğumuz çekirdekle ve bar için gereken diğer ürünlerle çalışalım.</p><a class="bt p" href="toptan.html">Toptan sayfası</a><a class="bt" href="toptan.html#teklif">Numune iste</a></div></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="art.js"></script>
+<script src="site.js"></script>
+<script>
+var DEF={title:"YEŞİL ÇEKİRDEKTEN\nFİNCANA.",intro:"Gücümüzü dışarıdan değil, üretimden alıyoruz. O uzun yolu kendi atölyemizde çiziyor, nitelikli kahveyi bir lüks olmaktan çıkarıp ona değer veren herkes için ulaşılabilir kılıyoruz.",hero_img:"",
+steps:[["Seçim","Yeşil çekirdeği tek tek seçiyor, partileri denemeden almıyoruz."],["Kavurma","Her kahvenin kendi profili var. Tadı yakalamak için küçük partilerle çalışıyoruz."],["Tadım","Kavurmadan sonra her partiyi fincanda test ediyoruz."]],
+story_title:"Kendi kurallarımızı yazıyoruz",story_text:"Bizim için \"Yüzde Bir\" olmak bir istatistik değil, bir duruştur. Ezberletilmiş algıların ve ana akım trendlerin dışında durma cesaretidir.\nKavuruyoruz, paylaşıyoruz. Aynı kahveyi hem kafemizde hem evinizde, hem de sizin kafenizde içebilirsiniz.",story_img:""};
+(async function(){shell("Kavurmahane");var d=await pc("kavurmahane",DEF);
+$("t").innerHTML=br(d.title);$("p").textContent=d.intro;$("hi").innerHTML=pic(d.hero_img,"roaster","21/9","Kavurma makinesi");
+$("st").innerHTML=(d.steps||[]).map(function(s,i){return'<div class="cd"><span class="num">0'+(i+1)+'</span><h3>'+E(s[0])+'</h3><p>'+E(s[1]||"")+'</p></div>'}).join("");
+$("s_t").textContent=d.story_title;$("s_p").innerHTML=String(d.story_text||"").split("\n").filter(Boolean).map(function(x){return'<p>'+E(x)+'</p>'}).join("");$("s_i").innerHTML=pic(d.story_img,"beans","4/3","Kahve çekirdekleri")})();
+</script>
+</body>
+</html>
