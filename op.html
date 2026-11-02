@@ -18,11 +18,25 @@ a.t b{display:block;font-size:16px}a.t small{display:block;color:var(--mu);font-
 a.t.big{background:var(--tx);color:var(--bg);border-color:var(--tx)}a.t.big small,a.t.big span{color:#444}
 .g{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g a.t{margin:0;padding:14px}
 .n{font-size:12.5px;color:var(--mu);border-top:1px solid var(--ln);margin-top:28px;padding-top:14px}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:14px;margin:0 0 8px}
+.card input{width:100%;font:inherit;color:var(--tx);background:#000;border:1px solid var(--ln);border-radius:10px;padding:11px;margin:4px 0 8px}
+.card button,.bt2{font:inherit;color:var(--tx);background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:10px 14px;cursor:pointer}
+.card button.p{background:#fff;color:#000;font-weight:700;border-color:#fff}.card button.d{color:#ff7b7b}.card button:disabled{opacity:.5;cursor:not-allowed}
+.rw{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid var(--ln);cursor:pointer}.rw small{display:block;color:var(--mu);font-size:12.5px}
+.chip{display:inline-block;border-radius:999px;padding:1px 9px;font-size:11.5px;font-weight:700;border:1px solid currentColor;margin-left:6px}
+.df{margin:0 0 8px;padding:8px;border:1px solid var(--ln);border-radius:8px;font-size:12px;overflow-x:auto;max-height:260px;overflow-y:auto;white-space:pre-wrap;word-break:break-word}.df .rm{display:block;background:#3a1515;color:#ffc2c2}.df .ad{display:block;background:#12301a;color:#b9f2c7}
+.ban{display:block;background:#ffd479;color:#000;font-weight:700;border-radius:12px;padding:12px 14px;margin:0 0 14px;text-decoration:none}
+.er{color:#ff7b7b}.ok{color:#7ddc8a}
 </style>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
 <body>
 <main>
 <h1>OP Yönetim Merkezi</h1><p class="s">Her şeye buradan girin. Bu sayfayı ana ekrana ekleyin, tek simgeyle hepsine ulaşın.</p>
+<div id="banner"></div>
+<h2 id="chh">Değişiklikler (onay)</h2>
+<div id="ch"><div class="card"><p class="s" style="margin:0">Yükleniyor...</p></div></div>
 <h2>Günlük işler</h2>
 <a class="t big" href="/MENU/pos-q8w3.html"><div><b>Kasa</b><small>Masalar, sipariş, ödeme, günlük rapor</small></div><span>›</span></a>
 <a class="t" href="/yonetim-m4x9.html"><div><b>Site yönetimi</b><small>Ürünler, toptan, blog, sayfalar, üyeler, teklifler</small></div><span>›</span></a>
@@ -40,5 +54,56 @@ a.t.big{background:var(--tx);color:var(--bg);border-color:var(--tx)}a.t.big smal
 <a class="t" href="https://search.google.com/search-console" rel="noopener"><div><b>Google Search Console</b><small>Arama görünürlüğü (site yayına alınınca)</small></div><span>↗</span></a>
 <p class="n">Kısa adresler: <b>onepercenter.com.tr/kasa</b> kasayı, <b>onepercenter.com.tr/op</b> bu sayfayı açar. Her araca ilk girişte kullanıcı adı ve şifre sorulur.</p>
 </main>
+<script>
+var sb=supabase.createClient("https://ojfmpnqyrdfybbmchbvq.supabase.co","sb_publishable_oS6qBLKqbAPCBCzGVe5efw_AFqvCPoG");
+var $=function(i){return document.getElementById(i)};
+function E(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+var TK="0x4AAAAAAFli3uwc6xrSxT7j",TT="",me=null,CH=[],sel=null,info={},msg="",busy="";
+function tsr(id){var el=$(id);if(!el)return;if(!window.turnstile){setTimeout(function(){tsr(id)},300);return}TT="";turnstile.render(el,{sitekey:TK,theme:"dark",callback:function(t){TT=t},"expired-callback":function(){TT=""},"error-callback":function(){TT=""}})}
+var STT={bekliyor:["Onay bekliyor","#ffd479"],uygulaniyor:["Uygulanıyor","#ffd479"],yayinlandi:["Yayında","#7ddc8a"],reddedildi:["Reddedildi","#a8a8a8"],hata:["Hata","#ff7b7b"],geri_alindi:["Geri alındı","#a8a8a8"]};
+var RN={site:"Site",menu:"Menü ve kasa"};
+function chip(s){var t=STT[s]||[s,"#a8a8a8"];return'<span class="chip" style="color:'+t[1]+'">'+t[0]+'</span>'}
+async function fnc(action,id){var r=await sb.functions.invoke("site-deploy",{body:{action:action,id:id}});if(r.error){var m=r.error.message;try{if(r.error.context&&r.error.context.json){var j=await r.error.context.json();m=j.error||m}}catch(x){}throw new Error(m)}return r.data}
+async function lch(){var r=await sb.from("change_requests").select("*").order("id",{ascending:false}).limit(50);if(r.error){msg=r.error.message;CH=[]}else CH=r.data;if(sel)sel=CH.filter(function(x){return x.id==sel.id})[0]||null}
+function lines(s,p){return String(s).split("\n").map(function(l){return p+" "+l}).join("\n")}
+function cut(s){s=String(s);return s.length>4000?s.slice(0,4000)+"\n… (kısaltıldı)":s}
+function fdiff(f){var h='<div style="margin:10px 0 4px"><b>'+E(RN[f.repo]||f.repo)+' / '+E(f.path)+'</b> <span class="s" style="font-size:12px">· '+(f.op=="edit"?"düzenleme":f.op=="write"?"yeni ya da tamamen yazılan dosya":"silinecek")+'</span></div>';
+if(f.op=="edit")h+=f.edits.map(function(e){return'<div class="df"><span class="rm">'+E(lines(cut(e.old),"−"))+'</span><span class="ad">'+E(lines(cut(e.new),"+"))+'</span></div>'}).join("");
+else if(f.op=="write"){var L=String(f.content).split("\n");h+='<div class="df"><span class="ad">'+E(lines(L.slice(0,60).join("\n"),"+"))+(L.length>60?"\n… ("+L.length+" satır)":"")+'</span></div>'}
+else h+='<div class="df"><span class="rm">− bu dosya silinecek</span></div>';return h}
+function vLogin(){return'<div class="card"><p class="s" style="margin:0 0 8px">Bekleyen değişiklikleri görmek ve onaylamak için yönetici girişi yapın.</p><input id="un" placeholder="Kullanıcı adı" autocapitalize="none" autocomplete="username"><input id="pw" type="password" placeholder="Şifre" autocomplete="current-password"><div id="ts" style="margin:0 0 10px"></div><button class="p" data-a="lg">Giriş yap</button>'+(msg?'<p class="er" style="margin:10px 0 0">'+E(msg)+'</p>':'')+'</div>'}
+function vList(){var h='<div style="display:flex;gap:8px;margin:0 0 8px"><button class="bt2" data-a="sync">Depo kopyasını yenile</button><button class="bt2" data-a="out">Çıkış</button></div>'+(msg?'<p class="'+(/yenilendi|Yayınlandı|geri alındı/i.test(msg)?"ok":"er")+'" style="margin:0 0 8px">'+E(msg)+'</p>':'')+'<p class="s" style="margin:0 0 6px;font-size:12.5px">Sohbette Claude\'a istediğiniz değişiklikler burada görünür. Satır satır inceler, onaylarsanız yayınlanır. Yayınlanan her değişiklik tek tıkla geri alınabilir.</p>';
+return h+(CH.length?CH.map(function(r){return'<div class="rw" data-a="open" data-i="'+r.id+'"><div><b>'+E(r.title)+'</b>'+chip(r.status)+'<small>#'+r.id+' · '+new Date(r.created_at).toLocaleString("tr-TR")+' · '+((r.files||[]).length)+' dosya</small></div><span class="s">›</span></div>'}).join(""):'<p class="s">Henüz değişiklik talebi yok.</p>')}
+function vDetail(){var r=sel,res=r.result,h='<div class="card"><button data-a="back">← Değişiklikler</button><h3 style="margin:12px 0 4px;font-size:17px">'+E(r.title)+chip(r.status)+'</h3><p class="s" style="margin:0 0 6px;font-size:12.5px">#'+r.id+' · '+new Date(r.created_at).toLocaleString("tr-TR")+'</p>'+(r.description?'<p style="white-space:pre-wrap;margin:0 0 6px">'+E(r.description)+'</p>':'');
+if(msg)h+='<p class="'+(/Yayınlandı|geri alındı/i.test(msg)?"ok":"er")+'">'+E(msg)+'</p>';
+h+=(r.files||[]).map(fdiff).join("");
+if(r.status=="bekliyor"){h+=info.ok===true?'<p class="ok">✓ Bu değişiklik depodaki güncel dosyalara uygulanabilir.</p>':info.ok===false?'<p class="er">Uygulanamıyor: '+E(info.err||"")+'</p>':'<p class="s">Kontrol ediliyor...</p>';
+h+='<div style="display:flex;gap:8px;margin-top:12px"><button class="p" data-a="apply"'+(info.ok===true&&!busy?'':' disabled')+'>Onayla ve yayınla</button><button class="d" data-a="rej"'+(busy?' disabled':'')+'>Reddet</button></div>'}
+if(r.status=="yayinlandi"&&res&&res.map){h+='<p class="ok">Yayında.</p>'+res.map(function(x){var rp=x.repo=="menu"?"MENU":"onepercentercoffee.github.io";return'<p class="s" style="font-size:12.5px;margin:0 0 4px">'+E(RN[x.repo])+': <a href="https://github.com/ONEPERCENTERCOFFEE/'+rp+'/commit/'+E(x.commit)+'" target="_blank" rel="noopener" style="color:#fff">kayıt '+E(String(x.commit).slice(0,7))+'</a></p>'}).join("")+'<div style="margin-top:10px"><button class="d" data-a="rev"'+(busy?' disabled':'')+'>Bu değişikliği geri al</button></div>'}
+if(r.status=="geri_alindi")h+='<p class="s">Bu değişiklik geri alındı.</p>';
+if(r.status=="hata")h+='<p class="er">Hata: '+E((res&&res.error)||"")+'</p>';
+return h+'</div>'}
+function R(){var p=CH.filter(function(x){return x.status=="bekliyor"}).length;
+$("banner").innerHTML=me&&p?'<a class="ban" href="#chh">'+p+' değişiklik onayınızı bekliyor ↓</a>':"";
+$("chh").innerHTML="Değişiklikler (onay)"+(me&&p?'<span class="chip" style="color:#ffd479">'+p+'</span>':"");
+$("ch").innerHTML=!me?vLogin():sel?vDetail():vList();if(!me)tsr("ts")}
+async function after(){var u=(await sb.auth.getUser()).data.user;if(!u)return false;
+var p=await sb.from("profiles").select("name,role,active").eq("id",u.id).maybeSingle();
+if(!p.data||p.data.role!="yonetici"||!p.data.active){await sb.auth.signOut();msg="Bu bölüm yalnızca yönetici içindir";return false}
+me=p.data;await lch();return true}
+document.addEventListener("click",async function(ev){var b=ev.target.closest("[data-a]");if(!b||!b.closest("#ch"))return;var a=b.dataset.a;if(busy)return;
+try{
+if(a=="lg"){msg="";var u=$("un").value.trim().toLowerCase().replace(/\s+/g,""),pw=$("pw").value;if(!u||!pw)msg="Kullanıcı adı ve şifre girin";else if(!TT)msg="Lütfen doğrulamayı tamamlayın";else{var r=await sb.auth.signInWithPassword({email:u+"@op.example.com",password:pw,options:{captchaToken:TT}});if(r.error)msg=/captcha/i.test(r.error.message)?"Doğrulama başarısız, sayfayı yenileyip tekrar deneyin":"Kullanıcı adı ya da şifre yanlış";else{msg="";await after()}}}
+else if(a=="out"){await sb.auth.signOut();me=null;sel=null;CH=[];msg=""}
+else if(a=="open"){msg="";sel=CH.filter(function(x){return x.id==b.dataset.i})[0];info={};R();if(sel&&sel.status=="bekliyor"){try{var ck=await fnc("check",sel.id);info={ok:ck.ok,err:ck.error}}catch(x){info={ok:false,err:x.message}}}}
+else if(a=="back"){sel=null;msg="";await lch()}
+else if(a=="apply"){if(!confirm("Bu değişiklik canlı siteye yayınlanacak. Onaylıyor musunuz?"))return;busy="apply";msg="";R();var ap=await fnc("apply",sel.id);busy="";if(!ap.ok)msg=ap.error;else msg="Yayınlandı. Site 1-2 dakika içinde güncellenir.";await lch()}
+else if(a=="rej"){if(!confirm("Bu değişiklik reddedilsin mi?"))return;var rj=await sb.rpc("reject_change",{p_id:sel.id});msg=rj.error?rj.error.message:"";sel=null;await lch()}
+else if(a=="rev"){if(!confirm("Bu değişiklik geri alınsın mı? Site önceki hâline döner."))return;busy="rev";msg="";R();var rv=await fnc("revert",sel.id);busy="";if(!rv.ok)msg=rv.error;else msg="Geri alındı. Site 1-2 dakika içinde önceki hâline döner.";await lch()}
+else if(a=="sync"){busy="sync";msg="Depo kopyası yenileniyor...";R();var sy=await fnc("sync");busy="";msg=sy.ok?"Depo kopyası yenilendi.":sy.error}
+}catch(x){busy="";msg="Hata: "+(x.message||x)}
+R()});
+(async function(){try{var s=await sb.auth.getSession();if(s.data.session)await after()}catch(x){msg=x.message||""}R()})();
+</script>
 </body>
 </html>
