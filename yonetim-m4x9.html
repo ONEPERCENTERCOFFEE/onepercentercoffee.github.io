@@ -70,35 +70,11 @@ pg_site:{kv:"site",del:false,t:"Site ayarları",df:{address:"",hours:[["Pazartes
 bl:{rq:"title",t:"Blog",tb:"blog_posts",ord:[["created_at",false]],ti:function(r){return r.title},su:function(r){return(r.published?"Yayında":"Taslak")+(r.category?" · "+r.category:"")},
  df:{published:false},
  f:[["title","Başlık","text"],["slug","Adres (küçük harf, tire)","slug","title"],["category","Kategori (Rehber, Kahve bilgisi...)","text"],["excerpt","Kısa özet","area"],["body","Yazı (HTML etiketleri kullanabilirsiniz: <h2>, <p>, <ul>)","area"],["cover","Kapak fotoğrafı","img"],["published","Yayınlansın","bool"],["published_at","Yayın tarihi","dt"],["seo_title","SEO başlığı (boşsa başlık kullanılır)","text"],["seo_desc","SEO açıklaması","area"]]}};
-var ORD=["ch","rp","wp","ct","dt","cu","qu","bl","pg_home","pg_kav","pg_cafe","pg_site","pg_legal"];
-CFG.ch={custom:true,t:"Değişiklikler"};
+var ORD=["rp","wp","ct","dt","cu","qu","bl","pg_home","pg_kav","pg_cafe","pg_site","pg_legal"];
 var tab="rp",rows=[],cur=null,isNew=false,msg="",me=null,CATS=[],CM={},BG={},rd=false;
 function st(m,c){$("st").textContent=m||"";$("st").className=c||"mu"}
 async function lc(){var r=await sb.from("site_categories").select("id,scope,name").order("scope").order("sort");CATS=r.data||[];CM={};CATS.forEach(function(c){CM[c.id]=c.name})}
-var CH=[],chSel=null,chInfo={};
-var STT={bekliyor:["Onay bekliyor","#ffd479"],uygulaniyor:["Uygulanıyor","#ffd479"],yayinlandi:["Yayında","#7ddc8a"],reddedildi:["Reddedildi","#a8a8a8"],hata:["Hata","#ff7b7b"],geri_alindi:["Geri alındı","#a8a8a8"]};
-var RN={site:"Site",menu:"Menü ve kasa"};
-async function fnc(action,id){var r=await sb.functions.invoke("site-deploy",{body:{action:action,id:id}});if(r.error){var m=r.error.message;try{if(r.error.context&&r.error.context.json){var j=await r.error.context.json();m=j.error||m}}catch(x){}throw new Error(m)}return r.data}
-async function lch(){var r=await sb.from("change_requests").select("*").order("id",{ascending:false}).limit(50);if(r.error){msg=r.error.message;CH=[]}else CH=r.data;if(chSel)chSel=CH.filter(function(x){return x.id==chSel.id})[0]||null}
-function lines(s,p){return String(s).split("\n").map(function(l){return p+" "+l}).join("\n")}
-function cut(s){s=String(s);return s.length>4000?s.slice(0,4000)+"\n… (kısaltıldı)":s}
-function fdiff(f){var h='<div style="margin:10px 0 4px"><b>'+E(RN[f.repo]||f.repo)+' / '+E(f.path)+'</b> <span class="mu">· '+(f.op=="edit"?"düzenleme":f.op=="write"?"yeni ya da tamamen yazılan dosya":"silinecek")+'</span></div>';
-if(f.op=="edit")h+=f.edits.map(function(e){return'<div class="df"><span class="rm">'+E(lines(cut(e.old),"−"))+'</span><span class="ad">'+E(lines(cut(e.new),"+"))+'</span></div>'}).join("");
-else if(f.op=="write")h+='<div class="df"><span class="ad">'+E(lines(cut(f.content).split("\n").slice(0,60).join("\n"),"+"))+(String(f.content).split("\n").length>60?'\n… ('+String(f.content).split("\n").length+' satır)':'')+'</span></div>';
-else h+='<div class="df"><span class="rm">− bu dosya silinecek</span></div>';return h}
-function chip(s){var t=STT[s]||[s,"#a8a8a8"];return'<span class="chip" style="color:'+t[1]+'">'+t[0]+'</span>'}
-function vCh(){var h=vHead()+vTabs()+(msg?'<p class="er">'+E(msg)+'</p>':'');
-if(!chSel){h+='<div class="top"><button data-a="chsync">Depo kopyasını yenile</button></div><p class="mu" style="font-size:13px;margin:0 0 6px">Sohbette Claude\'a istediğiniz değişiklikleri burada görür, satır satır inceler, onaylarsanız yayınlanır. Yayınlanan her değişiklik tek tıkla geri alınabilir.</p>';
-h+=CH.length?CH.map(function(r){return'<div class="rw" data-a="chopen" data-i="'+r.id+'"><div><b>'+E(r.title)+'</b>'+chip(r.status)+'<small>#'+r.id+' · '+new Date(r.created_at).toLocaleString("tr-TR")+' · '+((r.files||[]).length)+' dosya</small></div><span class="mu">›</span></div>'}).join(""):'<p class="mu">Henüz değişiklik talebi yok.</p>';return h}
-var r=chSel,res=r.result;h+='<div class="top"><button data-a="chback">← Değişiklikler</button></div><h2 style="margin:4px 0">'+E(r.title)+chip(r.status)+'</h2><p class="mu" style="margin:0 0 6px;font-size:13px">#'+r.id+' · '+new Date(r.created_at).toLocaleString("tr-TR")+'</p>'+(r.description?'<p style="white-space:pre-wrap">'+E(r.description)+'</p>':'');
-h+=(r.files||[]).map(fdiff).join("");
-if(r.status=="bekliyor"){h+=chInfo.ok===true?'<p class="ok">✓ Bu değişiklik depodaki güncel dosyalara uygulanabilir.</p>':chInfo.ok===false?'<p class="er">Uygulanamıyor: '+E(chInfo.err||"")+'</p>':'<p class="mu">Kontrol ediliyor...</p>';
-h+='<div class="top" style="margin-top:14px"><button class="p" data-a="chapply"'+(chInfo.ok===true?'':' disabled')+'>Onayla ve yayınla</button><button class="d" data-a="chrej">Reddet</button></div>'}
-if(r.status=="yayinlandi"&&res){h+='<p class="ok">Yayında.</p>'+res.map(function(x){var rp=x.repo=="menu"?"MENU":"onepercentercoffee.github.io";return'<p class="mu" style="font-size:12.5px">'+E(RN[x.repo])+': <a href="https://github.com/ONEPERCENTERCOFFEE/'+rp+'/commit/'+E(x.commit)+'" target="_blank" rel="noopener" style="color:#fff">kayıt '+E(String(x.commit).slice(0,7))+'</a></p>'}).join("")+'<div class="top"><button class="d" data-a="chrev">Bu değişikliği geri al</button></div>'}
-if(r.status=="geri_alindi")h+='<p class="mu">Bu değişiklik geri alındı.</p>';
-if(r.status=="hata")h+='<p class="er">Hata: '+E((res&&res.error)||"")+'</p>';
-return h}
-async function lb(){var a=await Promise.all([sb.from("customers").select("id",{count:"exact",head:true}).eq("wholesale_status","beklemede"),sb.from("quote_requests").select("id",{count:"exact",head:true}).eq("status","yeni"),sb.from("change_requests").select("id",{count:"exact",head:true}).eq("status","bekliyor")]);BG={cu:a[0].count||0,qu:a[1].count||0,ch:a[2].count||0}}
+async function lb(){var a=await Promise.all([sb.from("customers").select("id",{count:"exact",head:true}).eq("wholesale_status","beklemede"),sb.from("quote_requests").select("id",{count:"exact",head:true}).eq("status","yeni")]);BG={cu:a[0].count||0,qu:a[1].count||0}}
 async function lr(){var c=CFG[tab],q=sb.from(c.tb).select("*");c.ord.forEach(function(o){q=q.order(o[0],{ascending:o[1]!==false})});var r=await q.limit(1000);if(r.error){msg=r.error.message;rows=[]}else rows=r.data}
 function vTabs(){return'<div class="tabs">'+ORD.map(function(k){return'<button data-a="tab" data-k="'+k+'" class="'+(tab==k&&!cur?'on':'')+'">'+CFG[k].t+(BG[k]?'<span class="bd">'+BG[k]+'</span>':'')+'</button>'}).join("")+'</div>'}
 function vHead(){return'<div class="top"><h1 style="flex:1">Site yönetimi</h1><button data-a="out">Çıkış</button></div>'}
@@ -134,7 +110,7 @@ if(t=="faq")return v.split("\n").map(function(l){var i=l.indexOf("|");return{q:l
 if(t=="dt")return v?new Date(v).toISOString():null;
 return v.trim()}
 function snap(){CFG[tab].f.forEach(function(f){var v=val(f);if(v!==undefined)cur[f[0]]=v})}
-function R(){var h=!me?vLogin():cur?vForm():tab=="ch"?vCh():vList();$("app").innerHTML=h;$("bar").hidden=!(me&&cur);if(!me)tsr("ts");
+function R(){var h=!me?vLogin():cur?vForm():vList();$("app").innerHTML=h;$("bar").hidden=!(me&&cur);if(!me)tsr("ts");
 $("bt").innerHTML=cur?(isNew||CFG[tab].del===false?'':'<button class="d" data-a="del">Sil</button> ')+'<button class="p" data-a="save">Kaydet</button>':""}
 function vLogin(){return'<h1>Site yönetimi</h1><label>Kullanıcı adı</label><input id="un" autocapitalize="none" autocomplete="username"><label>Şifre</label><input id="pw" type="password" autocomplete="current-password"><div id="ts" style="margin:12px 0"></div><p><button class="p" data-a="lg">Giriş</button></p><p class="er">'+E(msg)+'</p>'}
 async function after(){var u=(await sb.auth.getUser()).data.user;if(!u)return false;var p=await sb.from("profiles").select("name,role,active").eq("id",u.id).maybeSingle();
@@ -151,13 +127,7 @@ document.addEventListener("click",async function(e){var b=e.target.closest("[dat
 try{
 if(a=="lg"){var u=$("un").value.trim().toLowerCase().replace(/\s+/g,""),pw=$("pw").value;if(!TT){msg="Lütfen doğrulamayı tamamlayın";R();return}var r=await sb.auth.signInWithPassword({email:u+"@op.example.com",password:pw,options:{captchaToken:TT}});if(r.error)msg=/captcha/i.test(r.error.message)?"Doğrulama başarısız, tekrar deneyin":"Kullanıcı adı ya da şifre yanlış";else await after()}
 else if(a=="out"){await sb.auth.signOut();me=null;cur=null}
-else if(a=="tab"){tab=b.dataset.k;cur=null;var c2=CFG[tab];if(c2.kv){var r3=await sb.from("page_content").select("value").eq("key",c2.kv).maybeSingle();cur=Object.assign({},c2.df||{},(r3.data&&r3.data.value)||{});isNew=false}else if(tab=="ch"){await lb();await lch()}else{await lb();await lr()}}
-else if(a=="chopen"){chSel=CH.filter(function(x){return x.id==b.dataset.i})[0];chInfo={};R();if(chSel&&chSel.status=="bekliyor"){try{var ck=await fnc("check",chSel.id);chInfo={ok:ck.ok,err:ck.error,files:ck.files}}catch(x){chInfo={ok:false,err:x.message}}}}
-else if(a=="chback"){chSel=null;await lb();await lch()}
-else if(a=="chapply"){if(!confirm("Bu değişiklik canlı siteye yayınlanacak. Onaylıyor musunuz?"))return;st("Yayınlanıyor...");var ap=await fnc("apply",chSel.id);if(!ap.ok){msg=ap.error;st("");await lch()}else{st("Yayınlandı. Site 1-2 dakika içinde güncellenir.","ok");await lch()}}
-else if(a=="chrej"){if(!confirm("Bu değişiklik reddedilsin mi?"))return;var rj=await sb.rpc("reject_change",{p_id:chSel.id});if(rj.error)msg=rj.error.message;await lb();await lch()}
-else if(a=="chrev"){if(!confirm("Bu değişiklik geri alınsın mı? Site önceki hâline döner."))return;st("Geri alınıyor...");var rv=await fnc("revert",chSel.id);if(!rv.ok){msg=rv.error;st("")}else st("Geri alındı. Site 1-2 dakika içinde önceki hâline döner.","ok");await lch()}
-else if(a=="chsync"){st("Depo kopyası yenileniyor...");var sy=await fnc("sync");if(!sy.ok){msg=sy.error;st("")}else st("Depo kopyası yenilendi: "+JSON.stringify(sy.synced),"ok")}
+else if(a=="tab"){tab=b.dataset.k;cur=null;var c2=CFG[tab];if(c2.kv){var r3=await sb.from("page_content").select("value").eq("key",c2.kv).maybeSingle();cur=Object.assign({},c2.df||{},(r3.data&&r3.data.value)||{});isNew=false}else{await lb();await lr()}}
 else if(a=="new"){cur=JSON.parse(JSON.stringify(c.df||{}));isNew=true;if(tab=="rp"||tab=="wp"){var sc=tab=="rp"?"retail":"wholesale";var f1=CATS.filter(function(x){return x.scope==sc})[0];if(f1)cur.category_id=f1.id}}
 else if(a=="edit"){cur=JSON.parse(JSON.stringify(rows.filter(function(r){return r.id==b.dataset.i})[0]));isNew=false}
 else if(a=="back"){cur=null;if(CFG[tab].kv)tab="rp";await lb();await lr()}
