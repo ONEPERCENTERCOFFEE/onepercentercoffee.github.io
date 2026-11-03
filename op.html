@@ -27,6 +27,7 @@ a.t.big{background:var(--tx);color:var(--bg);border-color:var(--tx)}a.t.big smal
 .df{margin:0 0 8px;padding:8px;border:1px solid var(--ln);border-radius:8px;font-size:12px;overflow-x:auto;max-height:260px;overflow-y:auto;white-space:pre-wrap;word-break:break-word}.df .rm{display:block;background:#3a1515;color:#ffc2c2}.df .ad{display:block;background:#12301a;color:#b9f2c7}
 .ban{display:block;background:#ffd479;color:#000;font-weight:700;border-radius:12px;padding:12px 14px;margin:0 0 14px;text-decoration:none}
 .er{color:#ff7b7b}.ok{color:#7ddc8a}
+.tabs{display:flex;gap:8px;margin:0 0 10px}.tabs button{font:inherit;font-weight:600;font-size:14px;color:var(--tx);background:none;border:1px solid var(--ln);border-radius:999px;padding:9px 16px;cursor:pointer}.tabs button.on{background:#fff;color:#000;border-color:#fff}.tabs button.on .chip{color:#8a5a00!important}
 </style>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
@@ -35,8 +36,9 @@ a.t.big{background:var(--tx);color:var(--bg);border-color:var(--tx)}a.t.big smal
 <main>
 <h1>OP Yönetim Merkezi</h1><p class="s">Her şeye buradan girin. Bu sayfayı ana ekrana ekleyin, tek simgeyle hepsine ulaşın.</p>
 <div id="banner"></div>
-<h2 id="chh">Değişiklikler (onay)</h2>
-<div id="ch"><div class="card"><p class="s" style="margin:0">Yükleniyor...</p></div></div>
+<div class="tabs"><button id="t1" class="on" data-t="1">Kısayollar</button><button id="t2" data-t="2">Değişiklikler</button></div>
+<div id="p2" hidden><div id="ch"><div class="card"><p class="s" style="margin:0">Yükleniyor...</p></div></div></div>
+<div id="p1">
 <h2>Günlük işler</h2>
 <a class="t big" href="/MENU/pos-q8w3.html"><div><b>Kasa</b><small>Masalar, sipariş, ödeme, günlük rapor</small></div><span>›</span></a>
 <a class="t" href="/yonetim-m4x9.html"><div><b>Site yönetimi</b><small>Ürünler, toptan, blog, sayfalar, üyeler, teklifler</small></div><span>›</span></a>
@@ -53,6 +55,7 @@ a.t.big{background:var(--tx);color:var(--bg);border-color:var(--tx)}a.t.big smal
 <a class="t" href="https://webmail.onepercenter.com.tr" rel="noopener"><div><b>Kurumsal e-posta</b><small>Webmail</small></div><span>↗</span></a>
 <a class="t" href="https://search.google.com/search-console" rel="noopener"><div><b>Google Search Console</b><small>Arama görünürlüğü (site yayına alınınca)</small></div><span>↗</span></a>
 <p class="n">Kısa adresler: <b>onepercenter.com.tr/kasa</b> kasayı, <b>onepercenter.com.tr/op</b> bu sayfayı açar. Her araca ilk girişte kullanıcı adı ve şifre sorulur.</p>
+</div>
 </main>
 <script>
 var sb=supabase.createClient("https://ojfmpnqyrdfybbmchbvq.supabase.co","sb_publishable_oS6qBLKqbAPCBCzGVe5efw_AFqvCPoG");
@@ -84,9 +87,11 @@ if(r.status=="geri_alindi")h+='<p class="s">Bu değişiklik geri alındı.</p>';
 if(r.status=="hata")h+='<p class="er">Hata: '+E((res&&res.error)||"")+'</p>';
 return h+'</div>'}
 function R(){var p=CH.filter(function(x){return x.status=="bekliyor"}).length;
-$("banner").innerHTML=me&&p?'<a class="ban" href="#chh">'+p+' değişiklik onayınızı bekliyor ↓</a>':"";
-$("chh").innerHTML="Değişiklikler (onay)"+(me&&p?'<span class="chip" style="color:#ffd479">'+p+'</span>':"");
+$("banner").innerHTML=me&&p?'<a class="ban" href="#" data-t="2">'+p+' değişiklik onayınızı bekliyor ↓</a>':"";
+$("t2").innerHTML="Değişiklikler"+(me&&p?'<span class="chip" style="color:#ffd479">'+p+'</span>':"");
 $("ch").innerHTML=!me?vLogin():sel?vDetail():vList();if(!me)tsr("ts")}
+function tab(n){n=+n;$("p1").hidden=n!=1;$("p2").hidden=n!=2;$("t1").classList.toggle("on",n==1);$("t2").classList.toggle("on",n==2);try{sessionStorage.setItem("optab",n)}catch(x){}}
+document.addEventListener("click",function(ev){var t=ev.target.closest("[data-t]");if(!t)return;ev.preventDefault();tab(t.dataset.t)});
 async function after(){var u=(await sb.auth.getUser()).data.user;if(!u)return false;
 var p=await sb.from("profiles").select("name,role,active").eq("id",u.id).maybeSingle();
 if(!p.data||p.data.role!="yonetici"||!p.data.active){await sb.auth.signOut();msg="Bu bölüm yalnızca yönetici içindir";return false}
@@ -103,7 +108,7 @@ else if(a=="rev"){if(!confirm("Bu değişiklik geri alınsın mı? Site önceki 
 else if(a=="sync"){busy="sync";msg="Depo kopyası yenileniyor...";R();var sy=await fnc("sync");busy="";msg=sy.ok?"Depo kopyası yenilendi.":sy.error}
 }catch(x){busy="";msg="Hata: "+(x.message||x)}
 R()});
-(async function(){try{var s=await sb.auth.getSession();if(s.data.session)await after()}catch(x){msg=x.message||""}R()})();
+(async function(){try{var s=await sb.auth.getSession();if(s.data.session)await after()}catch(x){msg=x.message||""}R();var n=1;try{n=+sessionStorage.getItem("optab")||1}catch(x){}tab(n)})();
 </script>
 </body>
 </html>
